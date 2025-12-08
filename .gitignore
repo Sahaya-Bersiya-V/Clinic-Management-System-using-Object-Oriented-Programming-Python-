@@ -1,0 +1,4 @@
+venv/
+connection/
+__pycache__/
+*.pyc
