@@ -57,7 +57,7 @@ class AdminDashboard:
             return
 
     # ------- Password Validation -------
-        password = input("Password: ").strip()
+        # password = input("Password: ").strip()
         if len(password) < 4:
             print("❌ Password must be at least 4 characters long.")
             return
