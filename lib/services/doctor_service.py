@@ -3,7 +3,7 @@ from dao.impl.lab_request_dao_impl import LabRequestDAOImpl
 from dao.impl.lab_report_dao_impl import LabReportDAOImpl # mainly for getting test list
 from models.appointment import Appointment
 from models.lab_request import LabRequest
-from search.search_engine import SearchEngine # Assuming exists? No, I'll stick to DAOs.
+# from search.search_engine import SearchEngine # Assuming exists? No, I'll stick to DAOs.
 from validation.validators import Validators
 
 class DoctorService:
