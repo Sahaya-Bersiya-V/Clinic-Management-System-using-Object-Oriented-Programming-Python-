@@ -16,9 +16,18 @@ class ReceptionistService:
     def register_patient(self, name, age, gender, contact, blood_group, address):
         err = Validators.validate_name(name)
         if err: raise ValueError(err)
+        err = Validators.validate_age(age)
+        if err: raise ValueError(err)
+        err = Validators.validate_gender(gender)
+        if err: raise ValueError(err)
         err = Validators.validate_phone(contact)
         if err: raise ValueError(err)
-        if not age or int(age) <= 0: raise ValueError("Invalid age")
+        
+        # Additional checks for fields not covered by specific validators but shouldn't be empty
+        err = Validators.validate_non_empty(blood_group, "Blood Group")
+        if err: raise ValueError(err)
+        err = Validators.validate_non_empty(address, "Address")
+        if err: raise ValueError(err)
         
         patient = Patient(name=name, age=age, gender=gender, contact=contact, blood_group=blood_group, address=address)
         return self.patient_dao.create_patient(patient)

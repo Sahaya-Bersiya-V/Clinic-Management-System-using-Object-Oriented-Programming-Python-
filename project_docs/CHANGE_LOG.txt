@@ -70,3 +70,5 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-09 | Enhanced Booking UX                         | Confirmation step needed.                         | Added confirmation prompt in ReceptionistDashboard.book_appointment.
 2025-12-09 | Enhanced Patient Registration UX            | Need smoother flow for new patients.              | 1. Register Patient now displays New ID.
            |                                                   |                                                   | 2. Offers immediate 'Book Appointment' step.
+2025-12-09 | Enhanced Patient Validation                 | Invalid input (e.g. Contact=9) was accepted.      | 1. Updated Validators (added Age, Gender rules).
+           |                                                   |                                                   | 2. Updated ReceptionistService to enforce them.

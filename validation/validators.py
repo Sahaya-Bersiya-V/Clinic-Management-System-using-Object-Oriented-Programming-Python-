@@ -55,3 +55,18 @@ class Validators:
             return None
         except ValueError:
             return "Invalid date format. Use YYYY-MM-DD."
+    @staticmethod
+    def validate_age(age):
+        if not age or not str(age).strip():
+            return "Age cannot be empty."
+        if not str(age).isdigit() or int(age) <= 0 or int(age) > 120:
+             return "Age must be a valid positive number (1-120)."
+        return None
+
+    @staticmethod
+    def validate_gender(gender):
+        if not gender or not gender.strip():
+            return "Gender cannot be empty."
+        if gender.upper() not in ['M', 'F', 'OTHER', 'MALE', 'FEMALE']:
+            return "Gender must be M, F, or Other."
+        return None
