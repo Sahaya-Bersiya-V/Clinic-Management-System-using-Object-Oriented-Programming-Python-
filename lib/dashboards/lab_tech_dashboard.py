@@ -25,7 +25,20 @@ class LabTechDashboard:
 
     def add_test_result(self):
         print("\n--- Add Test Result ---")
+        
+        try:
+            tests = self.service.get_available_tests()
+            print("Available Tests:", ", ".join(tests))
+        except Exception as e:
+            print(f"Could not fetch tests: {e}")
+
         patient_id = input("Patient ID: ").strip()
+        print("Choose your test from options")
+        print("""
+        1.Blood Count (CBC)
+        2.X-Ray
+        3.Urinalysis
+        4.MRI Scan""")
         test_name = input("Test Name: ").strip()
         result = input("Result: ").strip()
         

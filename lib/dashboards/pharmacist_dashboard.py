@@ -31,9 +31,11 @@ class PharmacistDashboard:
         name = input("Name: ").strip()
         price = input("Price: ").strip()
         quantity = input("Quantity: ").strip()
+        expiry_date = input("Expiry Date (YYYY-MM-DD): ").strip()
+        batch_no = input("Batch No: ").strip()
         
         try:
-            self.service.add_medicine(name, price, quantity)
+            self.service.add_medicine(name, price, quantity, expiry_date, batch_no)
             print("Medicine added successfully.")
         except Exception as e:
             print(f"Error: {e}")
@@ -43,7 +45,7 @@ class PharmacistDashboard:
         try:
             meds = self.service.view_medicines()
             for m in meds:
-                print(f"ID: {m.get_medicine_id()}, Name: {m.get_name()}, Price: {m.get_price()}, Qty: {m.get_quantity()}")
+                print(f"ID: {m.get_medicine_id()}, Name: {m.get_name()}, Price: {m.get_price()}, Qty: {m.get_quantity()}, Expiry: {m.get_expiry_date()}, Batch: {m.get_batch_no()}")
         except Exception as e:
             print(f"Error: {e}")
 

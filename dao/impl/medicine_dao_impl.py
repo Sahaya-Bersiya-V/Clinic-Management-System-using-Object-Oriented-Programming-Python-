@@ -10,8 +10,8 @@ class MedicineDAOImpl(MedicineDAO):
         connection = self.db_connection.get_connection()
         try:
             with connection.cursor() as cursor:
-                sql = "INSERT INTO medicines (name, price, quantity) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (medicine.get_name(), medicine.get_price(), medicine.get_quantity()))
+                sql = "INSERT INTO medicines (name, price, quantity, expiry_date, batch_no) VALUES (%s, %s, %s, %s, %s)"
+                cursor.execute(sql, (medicine.get_name(), medicine.get_price(), medicine.get_quantity(), medicine.get_expiry_date(), medicine.get_batch_no()))
                 medicine.set_medicine_id(cursor.lastrowid)
                 return medicine
         except Exception as e:
@@ -30,7 +30,9 @@ class MedicineDAOImpl(MedicineDAO):
                         medicine_id=row['medicine_id'],
                         name=row['name'],
                         price=row['price'],
-                        quantity=row['quantity']
+                        quantity=row['quantity'],
+                        expiry_date=row['expiry_date'],
+                        batch_no=row['batch_no']
                     ))
                 return medicines
         except Exception as e:
