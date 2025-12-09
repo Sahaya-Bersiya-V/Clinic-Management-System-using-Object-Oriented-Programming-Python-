@@ -40,7 +40,9 @@ CREATE TABLE IF NOT EXISTS medicines (
     medicine_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     price DECIMAL(10, 2),
-    quantity INT
+    quantity INT,
+    expiry_date DATE,
+    batch_no VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS lab_reports (

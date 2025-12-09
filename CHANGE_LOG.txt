@@ -1,0 +1,4 @@
+2025-12-09 - Added Expiry Date and Batch No to Medicine Module - User requested to capture expiry date and batch number for medicines as they were previously missing from the system. - 1. Updated `schema.sql` to add `expiry_date` and `batch_no` columns to `medicines` table.
+2. Updated `dao/impl/medicine_dao_impl.py` to include these fields in `create_medicine` (INSERT) and `get_all_medicines` (SELECT) methods.
+3. Updated `lib/services/pharmacist_service.py` to accept, validate, and pass `expiry_date` and `batch_no` in `add_medicine`.
+4. Updated `lib/dashboards/pharmacist_dashboard.py` to prompt user for inputs and display these fields in the medicine list.
