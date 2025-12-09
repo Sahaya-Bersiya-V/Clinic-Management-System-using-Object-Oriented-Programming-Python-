@@ -58,3 +58,4 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-09 | Refactored Codebase & Added Docs        | 1. Root directory uncluttered (only main.py).     | 1. Moved test scripts to /tests/ folder.
            |                                                   | 2. Non-tech docs requested for better readability.| 2. Added verbose docstrings to Doctor & Admin modules.
 2025-12-09 | File Organization                       | Cleanup root directory.                           | Moved .txt files (CHANGE_LOG, git_records, credentials) to project_docs/.
+2025-12-09 | File Organization                       | Cleanup root directory.                           | Moved .sql files to sql_scripts/. Updated apply_schema.py.

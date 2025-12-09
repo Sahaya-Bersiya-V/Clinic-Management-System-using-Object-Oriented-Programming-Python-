@@ -34,3 +34,4 @@
 | 2025-12-09 | 17:00:00 | `git push origin development`                                                                        | Pushed formatting updates for CHANGE_LOG.txt.                                              |
 | 2025-12-09 | 17:15:00 | `git push origin development`                                                                        | Pushed Refactoring (Code cleanup) and Documentation (Docstrings) to development.           |
 | 2025-12-09 | 17:25:00 | `mv *.txt project_docs/`                                                                            | Moved text documentation to project_docs/ folder.                                          |
+| 2025-12-09 | 17:35:00 | `mv *.sql sql_scripts/`                                                                           | Moved SQL scripts to sql_scripts/ folder.                                                  |
