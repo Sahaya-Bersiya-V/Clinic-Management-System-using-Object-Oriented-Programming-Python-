@@ -37,7 +37,8 @@ class LabTechDashboard:
         
         try:
             tests = self.service.get_available_tests()
-            print("Available Tests:", ", ".join(tests))
+            test_names = [t['test_name'] for t in tests]
+            print("Available Tests:", ", ".join(test_names))
         except Exception as e:
             print(f"Could not fetch tests: {e}")
 
@@ -73,7 +74,9 @@ class LabTechDashboard:
         if sub == '1':
             try:
                 tests = self.service.get_available_tests()
-                print("Current Catalog:", ", ".join(tests))
+                print("Current Catalog:")
+                for t in tests:
+                    print(f"ID: {t['test_id']}, Name: {t['test_name']}, Cost: {t['cost']}")
             except Exception as e:
                 print(f"Error: {e}")
         elif sub == '2':
