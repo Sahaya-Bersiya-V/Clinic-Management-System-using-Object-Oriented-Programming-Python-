@@ -34,13 +34,13 @@ class AdminDashboard:
         valid_roles = ["doctor", "receptionist", "pharmacist", "labtech"]
 
         if role not in valid_roles:
-            print(f"❌ Invalid role '{role}'. Allowed roles: {valid_roles}")
+            print(f"Invalid role '{role}'. Allowed roles: {valid_roles}")
             return
 
     # ------- Contact Validation -------
         contact = input("Contact: ").strip()
         if not contact.isdigit() or len(contact) != 10:
-            print("❌ Invalid contact number. It must be exactly 10 digits.")
+            print("Invalid contact number. It must be exactly 10 digits.")
             return
 
     # ------- Username Validation -------
@@ -48,25 +48,25 @@ class AdminDashboard:
 
     # Must not be only digits
         if username.isdigit():
-            print("❌ Invalid username: Username cannot contain only numbers.")
+            print("Invalid username: Username cannot contain only numbers.")
             return
 
     # Optional: username format rule
         if not username.isalnum():
-            print("❌ Invalid username: Only letters and numbers allowed. No spaces or symbols.")
+            print("Invalid username: Only letters and numbers allowed. No spaces or symbols.")
             return
 
     # ------- Password Validation -------
         password = input("Password: ").strip()
         if len(password) < 4:
-            print("❌ Password must be at least 4 characters long.")
+            print("Password must be at least 4 characters long.")
             return
 
         try:
             self.service.add_staff(name, role, contact, username, password)
-            print("✔️ Staff added successfully.")
+            print("Staff added successfully.")
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
 
 
 
