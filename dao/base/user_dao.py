@@ -9,3 +9,8 @@ class UserDAO(ABC):
     @abstractmethod
     def create_user(self, user):
         pass
+
+    @abstractmethod
+    def update_user_status(self, user_id, is_active):
+        pass
+

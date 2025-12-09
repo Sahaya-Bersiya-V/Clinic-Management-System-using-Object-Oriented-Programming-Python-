@@ -30,3 +30,19 @@ class AdminService:
 
     def get_all_staff(self):
         return self.staff_dao.get_all_staff()
+
+    def delete_staff(self, staff_id):
+        return self.staff_dao.delete_staff(staff_id)
+
+    def deactivate_staff(self, staff_id):
+        return self.staff_dao.deactivate_staff(staff_id)
+
+    def update_staff(self, staff):
+        return self.staff_dao.update_staff(staff)
+
+    def get_staff_by_role(self, role):
+        return self.staff_dao.get_staff_by_role(role)
+
+    def get_staff_by_id(self, staff_id):
+        return self.staff_dao.get_staff_by_id(staff_id)
+

@@ -51,11 +51,20 @@ class PharmacistDashboard:
 
     def generate_bill(self):
         print("\n--- Generate Bill ---")
+        patient_id = input("Patient ID: ").strip()
+        appointment_id = input("Appointment ID (Optional, press Enter to skip): ").strip()
         med_id = input("Medicine ID: ").strip()
         qty = input("Quantity: ").strip()
+        discount = input("Discount (0 if none): ").strip()
+        status = input("Status (Paid/Unpaid): ").strip()
+        date = input("Date (YYYY-MM-DD): ").strip()
         
         try:
-            total = self.service.generate_bill(med_id, qty)
-            print(f"Bill Generated. Total Amount: {total}")
+            bill = self.service.generate_bill(med_id, qty, patient_id, appointment_id, discount, status, date)
+            print(f"Bill Generated Successfully.")
+            print(f"Bill ID: {bill.get_bill_id()}")
+            print(f"Total Amount: {bill.get_total_amount()}")
+            print(f"Discount: {bill.get_discount()}")
+            print(f"Final Amount: {bill.get_final_amount()}")
         except Exception as e:
             print(f"Error: {e}")

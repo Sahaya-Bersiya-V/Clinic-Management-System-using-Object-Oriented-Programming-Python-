@@ -79,3 +79,44 @@ class StaffDAOImpl(StaffDAO):
                 cursor.execute(sql, (staff_id,))
         except Exception as e:
             raise e
+
+    def get_staff_by_role(self, role):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM staff WHERE role = %s"
+                cursor.execute(sql, (role,))
+                results = cursor.fetchall()
+                staff_list = []
+                for row in results:
+                    staff_list.append(Staff(
+                        staff_id=row['staff_id'],
+                        name=row['name'],
+                        role=row['role'],
+                        contact=row['contact'],
+                        user_id=row['user_id'],
+                        specialization=row.get('specialization'),
+                        shift_start=row.get('shift_start'),
+                        shift_end=row.get('shift_end')
+                    ))
+                return staff_list
+        except Exception as e:
+            raise e
+
+    def deactivate_staff(self, staff_id):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                # Get user_id from staff table
+                sql_get_user = "SELECT user_id FROM staff WHERE staff_id = %s"
+                cursor.execute(sql_get_user, (staff_id,))
+                result = cursor.fetchone()
+                
+                if result and result['user_id']:
+                    user_id = result['user_id']
+                    # Update is_active in users table
+                    sql_update = "UPDATE users SET is_active = FALSE WHERE user_id = %s"
+                    cursor.execute(sql_update, (user_id,))
+        except Exception as e:
+            raise e
+

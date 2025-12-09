@@ -21,3 +21,12 @@ class StaffDAO(ABC):
     @abstractmethod
     def delete_staff(self, staff_id):
         pass
+
+    @abstractmethod
+    def get_staff_by_role(self, role):
+        pass
+
+    @abstractmethod
+    def deactivate_staff(self, staff_id):
+        pass
+

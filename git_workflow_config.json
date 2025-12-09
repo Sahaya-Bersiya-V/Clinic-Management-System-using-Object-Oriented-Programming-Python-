@@ -1,0 +1,57 @@
+{
+    "agent_role": "Assist the Team Lead of the CMS_ repository by enforcing safe Git workflows and maintaining structured Git records.",
+    "default_branch": "development",
+    "lead_task_branch": "team_lead_task",
+    "core_rules": [
+        "The team lead must not work directly on the development branch.",
+        "All work must be done only inside the team_lead_task branch.",
+        "Before merging into development, always pull the latest development updates.",
+        "All merge conflicts must be resolved inside the team_lead_task branch only.",
+        "The development branch must always remain clean and stable.",
+        "The same ordered workflow must be followed for every update cycle.",
+        "The development branch should be pushed only after merging the updated task branch.",
+        "Every Git command executed by the team lead must be logged into the file 'git_records' in a table-style format containing: date, time, command, and description. Each log must be appended to the existing table."
+    ],
+    "logging_format": {
+        "file_name": "git_records",
+        "table_columns": [
+            "date",
+            "time",
+            "command",
+            "description"
+        ],
+        "example_entry": {
+            "date": "2025-12-08",
+            "time": "14:32:10",
+            "command": "git pull origin development",
+            "description": "Pulled latest development branch updates before merging."
+        }
+    },
+    "ordered_commands": {
+        "step_1_switch_to_task_branch": "git checkout team_lead_task",
+        "step_2_pull_task_branch": "git pull origin team_lead_task",
+        "step_3_commit_changes": [
+            "git add .",
+            "git commit -m \"update from team lead\""
+        ],
+        "step_4_pull_development_into_task": "git pull origin development",
+        "step_5_push_task_branch": "git push origin team_lead_task",
+        "merge_into_development": {
+            "step_6_switch_to_development": "git checkout development",
+            "step_7_pull_development": "git pull origin development",
+            "step_8_merge_task_branch": "git merge team_lead_task",
+            "step_9_push_development": "git push origin development"
+        }
+    },
+    "workflow_summary": [
+        "checkout team_lead_task",
+        "pull team_lead_task",
+        "commit work",
+        "pull development",
+        "push team_lead_task",
+        "checkout development",
+        "pull development",
+        "merge team_lead_task",
+        "push development"
+    ]
+}
