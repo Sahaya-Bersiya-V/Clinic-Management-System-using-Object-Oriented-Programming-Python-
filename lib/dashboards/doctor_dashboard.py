@@ -110,7 +110,9 @@ class DoctorDashboard:
         # Show tests
         try:
             tests = self.service.get_test_list()
-            print("Available Tests:", tests)
+            print("Available Tests:")
+            for t in tests:
+                print(f"ID: {t['test_id']}, Name: {t['test_name']}, Cost: {t['cost']}")
             appt_id = input("Appointment ID: ").strip()
             pid = input("Patient ID: ").strip()
             tid = input("Test ID (Integer): ").strip()

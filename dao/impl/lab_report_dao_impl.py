@@ -53,9 +53,10 @@ class LabReportDAOImpl(LabReportDAO):
         connection = self.db_connection.get_connection()
         try:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT test_name FROM lab_tests")
+                cursor.execute("SELECT test_id, test_name, cost FROM lab_tests")
                 results = cursor.fetchall()
-                return [row['test_name'] for row in results]
+                # Return list of dicts
+                return results
         except Exception as e:
             raise e
 
