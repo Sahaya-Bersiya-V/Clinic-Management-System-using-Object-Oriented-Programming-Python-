@@ -52,3 +52,16 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-09 | Fixed Lab Request Data Creation               | Lab Requests were not saving because Doctors      | 1. Updated LabReportDAOImpl to return full test details.
            |                                                   | could not see Test IDs, only Names.               | 2. Updated DoctorDashboard to display Test IDs.
            |                                                   | Entering Name into ID field caused failures.      | 3. Updated LabTechDashboard to handle new dict format.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-09 | Fixed Consultation Update UX                  | Diagnosis/Prescription inputs were not pre-filling| 1. Updated DoctorService (added get_appointment_details).
+           |                                                   | existing data, causing overwrites/confusion.      | 2. Updated DoctorDashboard (show current values).
+2025-12-09 | Refactored Codebase & Added Docs        | 1. Root directory uncluttered (only main.py).     | 1. Moved test scripts to /tests/ folder.
+           |                                                   | 2. Non-tech docs requested for better readability.| 2. Added verbose docstrings to Doctor & Admin modules.
+2025-12-09 | File Organization                       | Cleanup root directory.                           | Moved .txt files (CHANGE_LOG, git_records, credentials) to project_docs/.
+2025-12-09 | File Organization                       | Cleanup root directory.                           | Moved .sql files to sql_scripts/. Updated apply_schema.py.
+2025-12-09 | Enhanced Admin Dashboard                    | Unified separate doctor actions into generic staff| 1. Updated AdminDashboard.display menu.
+           |                                                   | management with role filtering.                   | 2. Replaced view_staff/view_doctors with view_staff_menu.
+           |                                                   |                                                   | 3. Replaced update/remove_doctor with update_staff_menu.
+2025-12-09 | Added Shift Update for Staff                    | Needed ability to change shift timings.           | 1. Updated AdminDashboard.update_staff_menu to prompt for shifts.
+2025-12-09 | Enhanced Appointment Booking                  | User needed confirmation of patient identity.     | 1. Updated ReceptionistService with get_patient_details.
+           |                                                   |                                                   | 2. Updated ReceptionistDashboard to show Name/Contact.

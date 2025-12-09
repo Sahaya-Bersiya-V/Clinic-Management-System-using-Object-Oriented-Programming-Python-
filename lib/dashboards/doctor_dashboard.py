@@ -6,6 +6,11 @@ class DoctorDashboard:
         self.service = DoctorService()
 
     def display(self):
+        """
+        Purpose: Displays the main menu for the Doctor's Dashboard and handles user input routing.
+        Context: Called by main.py after successful doctor login.
+        Calls: self.view_appointments, self.record_consultation, etc. based on user choice.
+        """
         while True:
             print(f"\n--- Doctor Dashboard ({self.user.get_username()}) ---")
             print("1. View Appointments")
@@ -48,6 +53,11 @@ class DoctorDashboard:
                 print("Invalid choice.")
 
     def view_appointments(self):
+        """
+        Purpose: Displays a list of appointments for the current doctor (entered ID).
+        Context: Called from self.display menu option 1.
+        Calls: DoctorService.get_appointments
+        """
         # In a real system, we'd map the user_id to a doctor_id.
         # For this demo, we'll ask for doctor ID or assume 1 if not mapped.
         # Since we don't have a session mapping user->staff, I'll ask for Doctor ID for demo purposes
@@ -64,16 +74,45 @@ class DoctorDashboard:
             print(f"Error: {e}")
 
     def record_consultation(self):
-        print("\n--- Record Consultation Notes ---")
+        """
+        Purpose: UI flow to record or update consultation notes (Diagnosis & Prescription).
+        Context: Called from self.display menu option 2 and 6.
+        Calls: DoctorService.get_appointment_details, DoctorService.record_consultation
+        """
+        print("\n--- Record/Update Consultation Notes ---")
         appt_id = input("Appointment ID: ").strip()
-        diagnosis = input("Diagnosis: ").strip()
-        prescription = input("Prescription (Initial): ").strip()
+        
         try:
+            appt = self.service.get_appointment_details(appt_id)
+            if not appt:
+                print("Appointment not found.")
+                return
+                
+            print(f"Patient ID: {appt.get_patient_id()}")
+            print(f"Date: {appt.get_date()}")
+            
+            # Show current
+            curr_diag = appt.get_diagnosis() or ""
+            curr_rx = appt.get_prescription() or ""
+            
+            print(f"Current Diagnosis: {curr_diag}")
+            diagnosis = input(f"New Diagnosis (Enter to keep): ").strip() or curr_diag
+            
+            print(f"Current Prescription (Text Note): {curr_rx}")
+            prescription = input(f"New Prescription (Enter to keep): ").strip() or curr_rx
+            
             self.service.record_consultation(appt_id, diagnosis, prescription)
-            print("Consultation notes recorded.")
-        except Exception as e: print(f"Error: {e}")
+            print("Consultation notes updated.")
+            
+        except Exception as e:
+            print(f"Error: {e}")
 
     def prescribe_medication(self):
+        """
+        Purpose: UI flow to add structured prescription items (medicines, dosage).
+        Context: Called from self.display menu option 3.
+        Calls: DoctorService.get_all_medicines, DoctorService.add_prescription_item
+        """
         print("\n--- Prescribe Medication ---")
         appt_id = input("Appointment ID: ").strip()
         
@@ -106,6 +145,11 @@ class DoctorDashboard:
             if more != 'y': break
 
     def prescribe_lab_test(self):
+        """
+        Purpose: UI flow to prescribe a lab test to a patient.
+        Context: Called from self.display menu option 4.
+        Calls: DoctorService.get_test_list, DoctorService.prescribe_lab_test
+        """
         print("\n--- Prescribe Lab Test ---")
         # Show tests
         try:
@@ -121,6 +165,11 @@ class DoctorDashboard:
         except Exception as e: print(f"Error: {e}")
 
     def view_medical_history(self):
+        """
+        Purpose: UI to view a patient's medical history logs.
+        Context: Called from self.display menu option 5.
+        Calls: DoctorService.view_medical_history
+        """
         print("\n--- View Medical History ---")
         pid = input("Patient ID: ").strip()
         try:
@@ -130,6 +179,11 @@ class DoctorDashboard:
         except Exception as e: print(f"Error: {e}")
 
     def approve_lab_report(self):
+        """
+        Purpose: UI to approve a pending/completed lab report.
+        Context: Called from self.display menu option 7.
+        Calls: DoctorService.approve_lab_test_report
+        """
         print("\n--- Approve Lab Report ---")
         rid = input("Lab Request ID: ").strip()
         try:
@@ -138,6 +192,11 @@ class DoctorDashboard:
         except Exception as e: print(f"Error: {e}")
 
     def recommend_follow_up(self):
+        """
+        Purpose: UI to schedule a follow-up appointment.
+        Context: Called from self.display menu option 8.
+        Calls: DoctorService.recommend_follow_up
+        """
         print("\n--- Recommend Follow-Up ---")
         pid = input("Patient ID: ").strip()
         did = input("Doctor ID: ").strip()
@@ -148,6 +207,11 @@ class DoctorDashboard:
         except Exception as e: print(f"Error: {e}")
 
     def generate_medical_certificate(self):
+        """
+        Purpose: UI to generate and print a medical certificate text.
+        Context: Called from self.display menu option 9.
+        Calls: DoctorService.generate_medical_certificate
+        """
         print("\n--- Generate Medical Certificate ---")
         pid = input("Patient ID: ").strip()
         diag = input("Diagnosis: ").strip()
@@ -158,6 +222,11 @@ class DoctorDashboard:
         except Exception as e: print(f"Error: {e}")
 
     def complete_consultation(self):
+        """
+        Purpose: UI to mark an appointment as fully completed.
+        Context: Called from self.display menu option 10.
+        Calls: DoctorService.mark_consultation_completed
+        """
         print("\n--- Complete Consultation ---")
         aid = input("Appointment ID: ").strip()
         try:
@@ -167,4 +236,9 @@ class DoctorDashboard:
 
     # Legacy alias ref
     def diagnose_patient(self):
+        """
+        Purpose: Alias for record_consultation.
+        Context: Legacy support.
+        Calls: self.record_consultation
+        """
         self.record_consultation()

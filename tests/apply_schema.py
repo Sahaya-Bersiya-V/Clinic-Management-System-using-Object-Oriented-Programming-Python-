@@ -16,7 +16,12 @@ def run_update():
         autocommit=True
     )
     
-    with open('hms_schema_update.sql', 'r') as f:
+    import os
+    # Get current dir of this script (tests/) then go up to root and down to sql_scripts
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sql_path = os.path.join(base_dir, 'sql_scripts', 'hms_schema_update.sql')
+    
+    with open(sql_path, 'r') as f:
         sql_script = f.read()
         
     statements = sql_script.split(';')

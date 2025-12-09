@@ -35,6 +35,9 @@ class ReceptionistService:
     def get_all_patients(self):
         return self.patient_dao.get_all_patients()
 
+    def get_patient_details(self, patient_id):
+        return self.patient_dao.get_patient_by_id(patient_id)
+
     def generate_bill(self, patient_id, appointment_id, total_amount, discount):
         try:
             total_amount = float(total_amount)

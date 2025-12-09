@@ -10,13 +10,16 @@ def main():
     auth_service = AuthService()
 
     while True:
-        print("\n=== Clinic Management System ===")
+        print("\n=========== Clinic Management System ===========")
+        print()
         print("1. Login")
         print("2. Exit")
+        print("="*25)
         
         choice = input("Enter choice: ").strip()
         
         if choice == '1':
+            print()
             username = input("Username: ").strip()
             password = input("Password: ").strip()
             

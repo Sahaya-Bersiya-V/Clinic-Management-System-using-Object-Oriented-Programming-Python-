@@ -65,12 +65,24 @@ class ReceptionistDashboard:
     def book_appointment(self):
         print("\n--- Book Appointment ---")
         patient_id = input("Patient ID: ").strip()
+        
+        # Fetch and show patient details first
+        try:
+            patient = self.service.get_patient_details(patient_id)
+            if not patient:
+                print("Patient not found. Please register first.")
+                return
+            print(f"Booking for: {patient.get_name()} | Contact: {patient.get_contact()}")
+        except Exception as e:
+            print(f"Error fetching patient: {e}")
+            return
+
         doctor_id = input("Doctor ID: ").strip()
         date = input("Date (YYYY-MM-DD): ").strip()
         
         try:
             self.service.book_appointment(patient_id, doctor_id, date)
-            print("Appointment booked successfully.")
+            print(f"Appointment booked successfully for {patient.get_name()}.")
         except Exception as e:
             print(f"Error: {e}")
 
