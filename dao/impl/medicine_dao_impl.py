@@ -17,6 +17,26 @@ class MedicineDAOImpl(MedicineDAO):
         except Exception as e:
             raise e
 
+    def get_medicine_by_id(self, medicine_id):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM medicines WHERE medicine_id = %s"
+                cursor.execute(sql, (medicine_id,))
+                result = cursor.fetchone()
+                if result:
+                    return Medicine(
+                        medicine_id=result['medicine_id'],
+                        name=result['name'],
+                        price=result['price'],
+                        quantity=result['quantity'],
+                        expiry_date=result['expiry_date'],
+                        batch_no=result['batch_no']
+                    )
+                return None
+        except Exception as e:
+            raise e
+
     def get_all_medicines(self):
         connection = self.db_connection.get_connection()
         try:

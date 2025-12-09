@@ -7,6 +7,10 @@ class MedicineDAO(ABC):
         pass
 
     @abstractmethod
+    def get_medicine_by_id(self, medicine_id):
+        pass
+
+    @abstractmethod
     def get_all_medicines(self):
         pass
 

@@ -39,3 +39,7 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   | in UI/Db, causing data loss/incompleteness.       | 2. Updated PatientDAOImpl: SQL queries.
            |                                                   |                                                   | 3. Updated ReceptionistService: Method signatures.
            |                                                   |                                                   | 4. Updated ReceptionistDashboard: UI Inputs/Outputs.
+2025-12-09 | Fixed Prescription Data Saving Issue            | Prescriptions were not being saved to structured  | 1. Created Prescription Model & DAO.
+           |                                                   | table, only as text notes.                        | 2. Updated DoctorService to use new system.
+           |                                                   |                                                   | 3. Updated DoctorDashboard for structured inputs.
+           |                                                   |                                                   | 4. Syncs structured data to text history view.
