@@ -76,11 +76,34 @@ class DoctorDashboard:
     def prescribe_medication(self):
         print("\n--- Prescribe Medication ---")
         appt_id = input("Appointment ID: ").strip()
-        med = input("Medication/Dosage: ").strip()
+        
+        # Show Medicines
         try:
-            self.service.prescribe_medication(appt_id, med)
-            print("Medication prescribed.")
-        except Exception as e: print(f"Error: {e}")
+            meds = self.service.get_all_medicines()
+            print("Available Medicines:")
+            for m in meds:
+                print(f"ID: {m.get_medicine_id()}, Name: {m.get_name()}, Stock: {m.get_quantity()}")
+        except Exception as e:
+            print(f"Error fetching medicines: {e}")
+            return
+
+        while True:
+            print("\nAdd Medication Item:")
+            mid = input("Medicine ID: ").strip()
+            if not mid: break # Exit loop if empty
+            
+            dosage = input("Dosage (e.g., 500mg): ").strip()
+            duration = input("Duration (e.g., 5 days): ").strip()
+            quantity = input("Quantity: ").strip()
+            
+            try:
+                self.service.add_prescription_item(appt_id, mid, dosage, duration, quantity)
+                print("Item added to prescription.")
+            except Exception as e:
+                print(f"Error adding item: {e}")
+            
+            more = input("Add another? (y/n): ").lower()
+            if more != 'y': break
 
     def prescribe_lab_test(self):
         print("\n--- Prescribe Lab Test ---")

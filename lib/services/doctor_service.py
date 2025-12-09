@@ -1,9 +1,11 @@
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
 from dao.impl.lab_request_dao_impl import LabRequestDAOImpl
-from dao.impl.lab_report_dao_impl import LabReportDAOImpl # mainly for getting test list
+from dao.impl.lab_report_dao_impl import LabReportDAOImpl
+from dao.impl.prescription_dao_impl import PrescriptionDAOImpl
+from dao.impl.medicine_dao_impl import MedicineDAOImpl
 from models.appointment import Appointment
 from models.lab_request import LabRequest
-# from search.search_engine import SearchEngine # Assuming exists? No, I'll stick to DAOs.
+from models.prescription import Prescription
 from validation.validators import Validators
 
 class DoctorService:
@@ -11,32 +13,32 @@ class DoctorService:
         self.appointment_dao = AppointmentDAOImpl()
         self.lab_request_dao = LabRequestDAOImpl()
         self.lab_report_dao = LabReportDAOImpl()
+        self.prescription_dao = PrescriptionDAOImpl()
+        self.medicine_dao = MedicineDAOImpl()
 
     def get_appointments(self, doctor_id):
-        # In a real app, doctor_id would come from the logged in user's staff record.
-        # For now, we assume the dashboard passes the correct ID.
         return self.appointment_dao.get_appointments_by_doctor(doctor_id)
 
     def diagnose_patient(self, appointment_id, diagnosis, prescription):
-        # Functions as Record Consultation Notes
         self.record_consultation(appointment_id, diagnosis, prescription)
 
     def record_consultation(self, appointment_id, diagnosis, prescription):
         err = Validators.validate_id(appointment_id)
         if err: raise ValueError(err)
         
-        # In a real app, fetch existing, update fields.
-        # Here we just blindly update based on ID.
-        appt = Appointment(appointment_id=appointment_id, status="Diagnosed", diagnosis=diagnosis, prescription=prescription)
-        self.appointment_dao.update_appointment(appt)
+        # We still update the diagnosis text in appointment.
+        # 'prescription' here might be general notes from old flow.
+        appt = self.appointment_dao.get_appointment_by_id(appointment_id)
+        if appt:
+            appt.set_status("Diagnosed")
+            appt.set_diagnosis(diagnosis)
+            # append notes or set them? Set for now.
+            if prescription:
+                appt.set_prescription(prescription) # Keeping this for text notes as well?
+            self.appointment_dao.update_appointment(appt)
 
     def prescribe_medication(self, appointment_id, prescription):
-        # Updates existing prescription
-        # We need to fetch current diagnosis to avoid overwriting it if possible, 
-        # but update_appointment takes a full object.
-        # Since we don't have get_by_id in all DAO impls perfectly yet, we might overwrite.
-        # But wait, I added get_appointment_by_id earlier!
-        # Let's use it.
+        # Legacy/Simple Text Prescription
         appointment = self.appointment_dao.get_appointment_by_id(appointment_id)
         if not appointment: raise ValueError("Appointment not found")
         
@@ -45,8 +47,45 @@ class DoctorService:
         appointment.set_prescription(new_presc)
         self.appointment_dao.update_appointment(appointment)
 
+    def add_prescription_item(self, appointment_id, medicine_id, dosage, duration, quantity):
+        # New Structured Prescription
+        err = Validators.validate_id(appointment_id)
+        if err: raise ValueError(err)
+        err = Validators.validate_id(medicine_id)
+        if err: raise ValueError(err)
+        
+        # Add to structured table
+        p = Prescription(appointment_id=appointment_id, medicine_id=medicine_id, dosage=dosage, duration=duration, quantity=quantity)
+        self.prescription_dao.create_prescription(p)
+
+        # Update legacy/text field in Appointment for history view
+        try:
+            medicine = self.medicine_dao.get_medicine_by_id(medicine_id)
+            med_name = medicine.get_name() if medicine else f"Med#{medicine_id}"
+            
+            appt = self.appointment_dao.get_appointment_by_id(appointment_id)
+            if appt:
+                new_entry = f"{med_name} ({dosage}, {duration}, Qty:{quantity})"
+                current = appt.get_prescription()
+                updated = f"{current}; {new_entry}" if current else new_entry
+                appt.set_prescription(updated)
+                self.appointment_dao.update_appointment(appt)
+        except Exception as e:
+            # Don't fail the whole transaction if legacy update fails, but good to log.
+            print(f"Warning: Failed to update legacy prescription text: {e}")
+
+    def get_all_medicines(self):
+        return self.medicine_dao.search_medicines("") # empty query returns all? No, search_medicines usually needs query. 
+        # Actually I need get_all in MedicineDAO or search with empty string behaving like get all.
+        # Let's check MedicineDAOImpl later, but commonly search '' might fail or return all.
+        # Assuming search_medicines works for now or I use another way.
+        # Wait, MedicineDAOImpl.search_medicines executes "WHERE name LIKE %s". '%%' matches all.
+        return self.medicine_dao.search_medicines("")
+
+    def get_prescribed_items(self, appointment_id):
+        return self.prescription_dao.get_prescriptions_by_appointment(appointment_id)
+
     def prescribe_lab_test(self, appointment_id, patient_id, test_id):
-        # Create Lab Request
         request = LabRequest(appointment_id=appointment_id, patient_id=patient_id, test_id=test_id, status='Pending')
         return self.lab_request_dao.create_request(request)
 
@@ -63,12 +102,10 @@ class DoctorService:
         self.lab_request_dao.update_request(request)
 
     def recommend_follow_up(self, patient_id, doctor_id, date):
-        # Create a new appointment
         appt = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Follow-Up Recommended")
         return self.appointment_dao.create_appointment(appt)
 
     def generate_medical_certificate(self, patient_id, diagnosis, days_rest):
-        # Return string
         return f"MEDICAL CERTIFICATE\nTo whom it may concern,\nPatient ID {patient_id} is diagnosed with {diagnosis} and is recommended {days_rest} days of rest."
 
     def mark_consultation_completed(self, appointment_id):
