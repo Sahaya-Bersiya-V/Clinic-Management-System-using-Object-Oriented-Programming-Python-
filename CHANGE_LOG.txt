@@ -45,8 +45,10 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   | table, only as text notes.                        | 2. Updated DoctorService to use new system.
            |                                                   |                                                   | 3. Updated DoctorDashboard for structured inputs.
            |                                                   |                                                   | 4. Syncs structured data to text history view.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
 2025-12-09 | Fixed Missing Staff Fields                    | Specialization/Shifts not captured in Add Staff.  | 1. Updated AdminService (add fields to create).
            |                                                   |                                                   | 2. Updated AdminDashboard (prompt for fields).
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
 2025-12-09 | Fixed Lab Request Data Creation               | Lab Requests were not saving because Doctors      | 1. Updated LabReportDAOImpl to return full test details.
            |                                                   | could not see Test IDs, only Names.               | 2. Updated DoctorDashboard to display Test IDs.
            |                                                   | Entering Name into ID field caused failures.      | 3. Updated LabTechDashboard to handle new dict format.
