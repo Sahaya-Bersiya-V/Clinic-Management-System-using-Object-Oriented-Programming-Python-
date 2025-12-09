@@ -18,3 +18,9 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   |                                                   | 4. Updated ReceptionistService: Added billing, search,
            |                                                   |                                                   |    cancel appt, check-in, check avail, update patient.
            |                                                   |                                                   | 5. Updated ReceptionistDashboard: Added UI options.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-09 | Added Doctor Module Functionalities               | Enhance doctor capabilities for complete care.    | 1. Updated AppointmentDAO: Added get_appointments_by_patient.
+           |                                                   |                                                   | 2. Created LabRequestDAO & LabRequestDAOImpl.
+           |                                                   |                                                   | 3. Updated DoctorService: Added Consultation, Medication,
+           |                                                   |                                                   |    Lab Test, History, Follow-up, Certificate, Completion.
+           |                                                   |                                                   | 4. Updated DoctorDashboard: Added menu options.
