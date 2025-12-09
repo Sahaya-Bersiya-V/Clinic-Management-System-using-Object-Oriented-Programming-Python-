@@ -7,31 +7,29 @@ class AdminDashboard:
         self.service = AdminService()
 
     def display(self):
+        """
+        Purpose: Displays the main menu for the Admin Dashboard and handles user input routing.
+        Context: Called by main.py after successful admin login.
+        Calls: self.add_staff, self.view_staff_menu, self.update_staff_menu, etc.
+        """
         while True:
             print(f"\n--- Admin Dashboard ({self.user.get_username()}) ---")
+            print("="*25)
             print("1. Add Staff")
-            print("2. View All Staff")
-            print("3. Remove/Deactivate Staff")
-            print("4. Update Doctor Information")
-            print("5. Remove Doctor")
-            print("6. View Doctor List")
-            print("7. Logout")
+            print("2. View Staff")
+            print("3. Update Staff (includes Remove)")
+            print("4. Logout")
+            print("*"*25)
             
             choice = input("Enter choice: ").strip()
             
             if choice == '1':
                 self.add_staff()
             elif choice == '2':
-                self.view_staff()
+                self.view_staff_menu()
             elif choice == '3':
-                self.remove_deactivate_staff()
+                self.update_staff_menu()
             elif choice == '4':
-                self.update_doctor()
-            elif choice == '5':
-                self.remove_doctor()
-            elif choice == '6':
-                self.view_doctors()
-            elif choice == '7':
                 print("Logging out...")
                 break
             else:
@@ -39,6 +37,7 @@ class AdminDashboard:
 
     def add_staff(self):
         print("\n--- Add Staff ---")
+        print("="*25)
         name = input("Name: ").strip()
 
         # ------- Role Validation -------
@@ -90,90 +89,131 @@ class AdminDashboard:
         except Exception as e:
             print(f"Error: {e}")
 
-    def view_staff(self):
-        print("\n--- Staff List ---")
-        try:
-            staff_list = self.service.get_all_staff()
-            for s in staff_list:
-                print(f"ID: {s.get_staff_id()}, Name: {s.get_name()}, Role: {s.get_role()}, Contact: {s.get_contact()}")
-        except Exception as e:
-            print(f"Error: {e}")
-
-    def remove_deactivate_staff(self):
-        print("\n--- Remove/Deactivate Staff ---")
-        staff_id = input("Enter Staff ID: ").strip()
-        action = input("Deactivate (D) or Remove (R)? ").strip().upper()
+    def view_staff_menu(self):
+        """
+        Purpose: Sub-menu for viewing staff members, allowing filtering by role.
+        Context: Called from display() option 2.
+        Calls: AdminService.get_all_staff, AdminService.get_staff_by_role
+        """
+        print("\n--- View Staff ---")
+        print("1. All Staff")
+        print("2. Doctors")
+        print("3. Pharmacists")
+        print("4. Lab Technicians")
+        print("5. Receptionists")
+        print("6. Back")
+        
+        choice = input("Filter by: ").strip()
         
         try:
-            if action == 'D':
-                self.service.deactivate_staff(staff_id)
-                print("Staff deactivated (Login disabled).")
-            elif action == 'R':
-                confirm = input("Are you sure you want to permanently delete this staff? (y/n): ").lower()
-                if confirm == 'y':
-                    self.service.delete_staff(staff_id)
-                    print("Staff removed permanently.")
+            staff_list = []
+            if choice == '1':
+                staff_list = self.service.get_all_staff()
+            elif choice == '2':
+                staff_list = self.service.get_staff_by_role('doctor')
+            elif choice == '3':
+                staff_list = self.service.get_staff_by_role('pharmacist')
+            elif choice == '4':
+                staff_list = self.service.get_staff_by_role('labtech')
+            elif choice == '5':
+                staff_list = self.service.get_staff_by_role('receptionist')
+            elif choice == '6':
+                return
+            else:
+                print("Invalid choice.")
+                return
+
+            if not staff_list:
+                print("No staff records found for this category.")
+            else:
+                for s in staff_list:
+                    print(f"ID: {s.get_staff_id()}, Name: {s.get_name()}, Role: {s.get_role()}, Contact: {s.get_contact()}, Spec: {s.get_specialization()}")
+        except Exception as e:
+            print(f"Error fetching staff: {e}")
+
+    def update_staff_menu(self):
+        """
+        Purpose: UI to update any staff member's details or remove/deactivate them.
+        Context: Called from display() option 3.
+        Calls: AdminService.get_staff_by_role (to list options), AdminService.update_staff, AdminService.delete_staff
+        """
+        print("\n--- Update/Remove Staff ---")
+        print("Select Role to Update:")
+        print("1. Doctors")
+        print("2. Pharmacists")
+        print("3. Lab Technicians")
+        print("4. Receptionists")
+        print("5. Back")
+        
+        choice = input("Select Role: ").strip()
+        role_filter = ""
+        if choice == '1': role_filter = 'doctor'
+        elif choice == '2': role_filter = 'pharmacist'
+        elif choice == '3': role_filter = 'labtech'
+        elif choice == '4': role_filter = 'receptionist'
+        elif choice == '5': return
+        else:
+            print("Invalid choice.")
+            return
+
+        # Show list for convenience
+        try:
+            staff_list = self.service.get_staff_by_role(role_filter)
+            print(f"\n--- {role_filter.capitalize()} List ---")
+            for s in staff_list:
+                    print(f"ID: {s.get_staff_id()}, Name: {s.get_name()}")
+        except Exception as e:
+            print(f"Error listing staff: {e}")
+            return
+
+        staff_id = input("\nEnter Staff ID to update/remove: ").strip()
+        if not staff_id: return
+
+        try:
+            staff = self.service.get_staff_by_id(staff_id)
+            if not staff:
+                print("Staff not found.")
+                return
+            
+            # Additional check to ensure we aren't editing a pharmacist when we selected Doctor menu (though ID is unique)
+            if staff.get_role().lower() != role_filter:
+                print(f"Warning: This staff member is a {staff.get_role()}, not a {role_filter}.")
+                confirm = input("Continue anyway? (y/n): ").lower()
+                if confirm != 'y': return
+
+            print("\nActions:")
+            print("1. Update Details")
+            print("2. Remove/Deactivate")
+            action = input("Choice: ").strip()
+
+            if action == '1':
+                print(f"Editing {staff.get_role()}: {staff.get_name()}")
+                print("Leave blank to keep current value.")
+                
+                name = input(f"Name ({staff.get_name()}): ").strip() or staff.get_name()
+                contact = input(f"Contact ({staff.get_contact()}): ").strip() or staff.get_contact()
+                spec = input(f"Specialization ({staff.get_specialization()}): ").strip() or staff.get_specialization()
+                # Could allow role change here but that's complex (requires checking new user linkage etc?). sticking to basic fields.
+                
+                staff.set_name(name)
+                staff.set_contact(contact)
+                staff.set_specialization(spec)
+                
+                self.service.update_staff(staff)
+                print("Staff information updated.")
+
+            elif action == '2':
+               sub = input("Deactivate (D) or Remove (R)? ").strip().upper()
+               if sub == 'D':
+                   self.service.deactivate_staff(staff_id)
+                   print("Staff deactivated.")
+               elif sub == 'R':
+                   sure = input("Permanently delete? (y/n): ").lower()
+                   if sure == 'y':
+                       self.service.delete_staff(staff_id)
+                       print("Staff deleted.")
             else:
                 print("Invalid action.")
-        except Exception as e:
-            print(f"Error: {e}")
 
-    def update_doctor(self):
-        print("\n--- Update Doctor Information ---")
-        staff_id = input("Enter Doctor ID: ").strip()
-        try:
-            staff = self.service.get_staff_by_id(staff_id)
-            if not staff:
-                print("Staff not found.")
-                return
-            
-            if staff.get_role().lower() != 'doctor':
-                print("ID belongs to a staff member who is NOT a doctor.")
-                return
-
-            print(f"Editing Doctor: {staff.get_name()}")
-            print("Leave blank to keep current value.")
-            
-            name = input(f"Name ({staff.get_name()}): ").strip() or staff.get_name()
-            contact = input(f"Contact ({staff.get_contact()}): ").strip() or staff.get_contact()
-            specialization = input(f"Specialization ({staff.get_specialization()}): ").strip() or staff.get_specialization()
-            
-            staff.set_name(name)
-            staff.set_contact(contact)
-            staff.set_specialization(specialization)
-            
-            self.service.update_staff(staff)
-            print("Doctor information updated.")
-        except Exception as e:
-            print(f"Error: {e}")
-
-    def remove_doctor(self):
-        print("\n--- Remove Doctor ---")
-        staff_id = input("Enter Doctor ID: ").strip()
-        try:
-            staff = self.service.get_staff_by_id(staff_id)
-            if not staff:
-                print("Staff not found.")
-                return
-            
-            if staff.get_role().lower() != 'doctor':
-                print("ID belongs to a staff member who is NOT a doctor.")
-                return
-            
-            confirm = input(f"Are you sure you want to remove Dr. {staff.get_name()}? (y/n): ").lower()
-            if confirm == 'y':
-                self.service.delete_staff(staff_id)
-                print("Doctor removed.")
-        except Exception as e:
-            print(f"Error: {e}")
-
-    def view_doctors(self):
-        print("\n--- Doctor List ---")
-        try:
-            doctors = self.service.get_staff_by_role("doctor")
-            if not doctors:
-                print("No doctors found.")
-            for doc in doctors:
-                print(f"ID: {doc.get_staff_id()}, Name: {doc.get_name()}, Specialization: {doc.get_specialization()}, Contact: {doc.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")

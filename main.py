@@ -11,13 +11,16 @@ def main():
 
     while True:
         print("\n=== Clinic Management System ===")
+        print("="*70)
         print("1. Login")
         print("2. Exit")
+        print("="*70)
         
         choice = input("Enter choice: ").strip()
         
         if choice == '1':
             username = input("Username: ").strip()
+            print()
             password = input("Password: ").strip()
             
             try:
