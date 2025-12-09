@@ -19,8 +19,8 @@ def main():
         choice = input("Enter choice: ").strip()
         
         if choice == '1':
-            username = input("Username: ").strip()
             print()
+            username = input("Username: ").strip()
             password = input("Password: ").strip()
             
             try:

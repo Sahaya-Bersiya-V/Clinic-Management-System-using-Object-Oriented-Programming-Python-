@@ -17,7 +17,7 @@ class AdminDashboard:
             print("="*25)
             print("1. Add Staff")
             print("2. View Staff")
-            print("3. Update Staff (includes Remove)")
+            print("3. Edit/Remove Staff")
             print("4. Logout")
             print("*"*25)
             
@@ -193,11 +193,15 @@ class AdminDashboard:
                 name = input(f"Name ({staff.get_name()}): ").strip() or staff.get_name()
                 contact = input(f"Contact ({staff.get_contact()}): ").strip() or staff.get_contact()
                 spec = input(f"Specialization ({staff.get_specialization()}): ").strip() or staff.get_specialization()
-                # Could allow role change here but that's complex (requires checking new user linkage etc?). sticking to basic fields.
+                
+                s_start = input(f"Shift Start ({staff.get_shift_start()}): ").strip() or staff.get_shift_start()
+                s_end = input(f"Shift End ({staff.get_shift_end()}): ").strip() or staff.get_shift_end()
                 
                 staff.set_name(name)
                 staff.set_contact(contact)
                 staff.set_specialization(spec)
+                staff.set_shift_start(s_start)
+                staff.set_shift_end(s_end)
                 
                 self.service.update_staff(staff)
                 print("Staff information updated.")
