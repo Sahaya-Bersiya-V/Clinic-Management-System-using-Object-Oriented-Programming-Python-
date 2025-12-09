@@ -17,28 +17,44 @@ class DoctorService:
         self.medicine_dao = MedicineDAOImpl()
 
     def get_appointments(self, doctor_id):
+        """
+        Purpose: Retrieves a list of appointments assigned to a specific doctor.
+        Context: Called by DoctorDashboard.view_appointments to list schedule.
+        Calls: AppointmentDAOImpl.get_appointments_by_doctor
+        """
         return self.appointment_dao.get_appointments_by_doctor(doctor_id)
 
     def diagnose_patient(self, appointment_id, diagnosis, prescription):
+        """
+        Purpose: Records a diagnosis and initial prescription for a patient during an appointment.
+        Context: Legacy alias for record_consultation. Called by DoctorDashboard.diagnose_patient.
+        Calls: self.record_consultation
+        """
         self.record_consultation(appointment_id, diagnosis, prescription)
 
     def record_consultation(self, appointment_id, diagnosis, prescription):
+        """
+        Purpose: Updates an appointment with diagnosis details and text-based prescription notes. Sets status to 'Diagnosed'.
+        Context: Called by DoctorDashboard.record_consultation for documentation.
+        Calls: Validators.validate_id, AppointmentDAOImpl.get_appointment_by_id, AppointmentDAOImpl.update_appointment
+        """
         err = Validators.validate_id(appointment_id)
         if err: raise ValueError(err)
         
-        # We still update the diagnosis text in appointment.
-        # 'prescription' here might be general notes from old flow.
         appt = self.appointment_dao.get_appointment_by_id(appointment_id)
         if appt:
             appt.set_status("Diagnosed")
             appt.set_diagnosis(diagnosis)
-            # append notes or set them? Set for now.
             if prescription:
-                appt.set_prescription(prescription) # Keeping this for text notes as well?
+                appt.set_prescription(prescription)
             self.appointment_dao.update_appointment(appt)
 
     def prescribe_medication(self, appointment_id, prescription):
-        # Legacy/Simple Text Prescription
+        """
+        Purpose: Appends a text string to the appointment's prescription field (Legacy/Notes).
+        Context: Called by DoctorDashboard.prescribe_medication (legacy path).
+        Calls: AppointmentDAOImpl.get_appointment_by_id, AppointmentDAOImpl.update_appointment
+        """
         appointment = self.appointment_dao.get_appointment_by_id(appointment_id)
         if not appointment: raise ValueError("Appointment not found")
         
@@ -48,17 +64,19 @@ class DoctorService:
         self.appointment_dao.update_appointment(appointment)
 
     def add_prescription_item(self, appointment_id, medicine_id, dosage, duration, quantity):
-        # New Structured Prescription
+        """
+        Purpose: Creates a structured prescription entry and syncs it to the appointment's text notes.
+        Context: Called by DoctorDashboard.prescribe_medication for adding specific items.
+        Calls: PrescriptionDAOImpl.create_prescription, MedicineDAOImpl.get_medicine_by_id, AppointmentDAOImpl.update_appointment
+        """
         err = Validators.validate_id(appointment_id)
         if err: raise ValueError(err)
         err = Validators.validate_id(medicine_id)
         if err: raise ValueError(err)
         
-        # Add to structured table
         p = Prescription(appointment_id=appointment_id, medicine_id=medicine_id, dosage=dosage, duration=duration, quantity=quantity)
         self.prescription_dao.create_prescription(p)
 
-        # Update legacy/text field in Appointment for history view
         try:
             medicine = self.medicine_dao.get_medicine_by_id(medicine_id)
             med_name = medicine.get_name() if medicine else f"Med#{medicine_id}"
@@ -71,51 +89,100 @@ class DoctorService:
                 appt.set_prescription(updated)
                 self.appointment_dao.update_appointment(appt)
         except Exception as e:
-            # Don't fail the whole transaction if legacy update fails, but good to log.
             print(f"Warning: Failed to update legacy prescription text: {e}")
 
     def get_all_medicines(self):
-        return self.medicine_dao.search_medicines("") # empty query returns all? No, search_medicines usually needs query. 
-        # Actually I need get_all in MedicineDAO or search with empty string behaving like get all.
-        # Let's check MedicineDAOImpl later, but commonly search '' might fail or return all.
-        # Assuming search_medicines works for now or I use another way.
-        # Wait, MedicineDAOImpl.search_medicines executes "WHERE name LIKE %s". '%%' matches all.
+        """
+        Purpose: Retrieves a list of all available medicines in the inventory.
+        Context: Called by DoctorDashboard to show available options for prescription.
+        Calls: MedicineDAOImpl.search_medicines
+        """
         return self.medicine_dao.search_medicines("")
 
     def get_prescribed_items(self, appointment_id):
+        """
+        Purpose: Retrieves structured prescription items for a specific appointment.
+        Context: Called by dashboards or history viewers to see detailed medication list.
+        Calls: PrescriptionDAOImpl.get_prescriptions_by_appointment
+        """
         return self.prescription_dao.get_prescriptions_by_appointment(appointment_id)
 
     def prescribe_lab_test(self, appointment_id, patient_id, test_id):
+        """
+        Purpose: Creates a new Lab Request for a patient.
+        Context: Called by DoctorDashboard.prescribe_lab_test.
+        Calls: LabRequestDAOImpl.create_request
+        """
         request = LabRequest(appointment_id=appointment_id, patient_id=patient_id, test_id=test_id, status='Pending')
         return self.lab_request_dao.create_request(request)
 
     def view_medical_history(self, patient_id):
+        """
+        Purpose: Retrieves past appointments and medical records for a patient.
+        Context: Called by DoctorDashboard.view_medical_history.
+        Calls: AppointmentDAOImpl.get_appointments_by_patient
+        """
         return self.appointment_dao.get_appointments_by_patient(patient_id)
 
     def update_consultation_notes(self, appointment_id, diagnosis, prescription):
+        """
+        Purpose: Updates existing consultation notes.
+        Context: Called by DoctorDashboard.update_consultation_notes.
+        Calls: self.record_consultation
+        """
         self.record_consultation(appointment_id, diagnosis, prescription)
 
     def approve_lab_test_report(self, request_id):
+        """
+        Purpose: Updates the status of a Lab Request to 'Approved' after review.
+        Context: Called by DoctorDashboard.approve_lab_report.
+        Calls: LabRequestDAOImpl.get_request_by_id, LabRequestDAOImpl.update_request
+        """
         request = self.lab_request_dao.get_request_by_id(request_id)
         if not request: raise ValueError("Request not found")
         request.set_status("Approved")
         self.lab_request_dao.update_request(request)
 
     def recommend_follow_up(self, patient_id, doctor_id, date):
+        """
+        Purpose: Creates a new appointment with status 'Follow-Up Recommended'.
+        Context: Called by DoctorDashboard.recommend_follow_up.
+        Calls: AppointmentDAOImpl.create_appointment
+        """
         appt = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Follow-Up Recommended")
         return self.appointment_dao.create_appointment(appt)
 
     def generate_medical_certificate(self, patient_id, diagnosis, days_rest):
+        """
+        Purpose: Generates a text string representing a medical certificate.
+        Context: Called by DoctorDashboard.generate_medical_certificate.
+        Calls: None (String formatting only)
+        """
         return f"MEDICAL CERTIFICATE\nTo whom it may concern,\nPatient ID {patient_id} is diagnosed with {diagnosis} and is recommended {days_rest} days of rest."
 
     def mark_consultation_completed(self, appointment_id):
+        """
+        Purpose: Marks an appointment/consultation as 'Completed'.
+        Context: Called by DoctorDashboard.complete_consultation.
+        Calls: AppointmentDAOImpl.get_appointment_by_id, AppointmentDAOImpl.update_appointment
+        """
         appointment = self.appointment_dao.get_appointment_by_id(appointment_id)
         if not appointment: raise ValueError("Appointment not found")
         appointment.set_status("Completed")
         self.appointment_dao.update_appointment(appointment)
 
     def get_test_list(self):
+        """
+        Purpose: Retrieves the list of available lab tests (Catalog).
+        Context: Called by DoctorDashboard to show test options.
+        Calls: LabReportDAOImpl.get_all_tests
+        """
         return self.lab_report_dao.get_all_tests()
 
     def get_appointment_details(self, appointment_id):
+        """
+        Purpose: Retrieves detailed information for a specific appointment.
+        Context: Called by DoctorDashboard for pre-filling update forms.
+        Calls: AppointmentDAOImpl.get_appointment_by_id
+        """
         return self.appointment_dao.get_appointment_by_id(appointment_id)
