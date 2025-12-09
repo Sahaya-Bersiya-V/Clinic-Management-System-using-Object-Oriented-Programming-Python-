@@ -53,9 +53,11 @@ class ReceptionistDashboard:
         age = input("Age: ").strip()
         gender = input("Gender: ").strip()
         contact = input("Contact: ").strip()
+        blood_group = input("Blood Group: ").strip()
+        address = input("Address: ").strip()
         
         try:
-            self.service.register_patient(name, age, gender, contact)
+            self.service.register_patient(name, age, gender, contact, blood_group, address)
             print("Patient registered successfully.")
         except Exception as e:
             print(f"Error: {e}")
@@ -77,7 +79,7 @@ class ReceptionistDashboard:
         try:
             patients = self.service.get_all_patients()
             for p in patients:
-                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Blood: {p.get_blood_group()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")
 
@@ -100,7 +102,9 @@ class ReceptionistDashboard:
             age = input("New Age: ")
             gender = input("New Gender: ")
             contact = input("New Contact: ")
-            self.service.update_patient_details(pid, name, age, gender, contact)
+            blood_group = input("New Blood Group: ")
+            address = input("New Address: ")
+            self.service.update_patient_details(pid, name, age, gender, contact, blood_group, address)
             print("Patient Details Updated.")
         except Exception as e: print(f"Error: {e}")
 
@@ -118,7 +122,7 @@ class ReceptionistDashboard:
             query = input("Enter Name or Contact: ")
             patients = self.service.search_patient_record(query)
             for p in patients:
-                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}, Blood: {p.get_blood_group()}")
         except Exception as e: print(f"Error: {e}")
 
     def print_receipt(self):

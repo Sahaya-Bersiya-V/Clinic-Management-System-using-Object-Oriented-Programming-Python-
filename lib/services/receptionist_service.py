@@ -13,14 +13,14 @@ class ReceptionistService:
         self.appointment_dao = AppointmentDAOImpl()
         self.bill_dao = BillDAOImpl()
 
-    def register_patient(self, name, age, gender, contact):
+    def register_patient(self, name, age, gender, contact, blood_group, address):
         err = Validators.validate_name(name)
         if err: raise ValueError(err)
         err = Validators.validate_phone(contact)
         if err: raise ValueError(err)
         if not age or int(age) <= 0: raise ValueError("Invalid age")
         
-        patient = Patient(name=name, age=age, gender=gender, contact=contact)
+        patient = Patient(name=name, age=age, gender=gender, contact=contact, blood_group=blood_group, address=address)
         return self.patient_dao.create_patient(patient)
 
     def book_appointment(self, patient_id, doctor_id, date):
@@ -45,13 +45,15 @@ class ReceptionistService:
         except ValueError:
             raise ValueError("Invalid amount or discount")
 
-    def update_patient_details(self, patient_id, name, age, gender, contact):
+    def update_patient_details(self, patient_id, name, age, gender, contact, blood_group, address):
         patient = self.patient_dao.get_patient_by_id(patient_id)
         if not patient: raise ValueError("Patient not found")
         patient.set_name(name)
         patient.set_age(age)
         patient.set_gender(gender)
         patient.set_contact(contact)
+        patient.set_blood_group(blood_group)
+        patient.set_address(address)
         self.patient_dao.update_patient(patient)
 
     def cancel_appointment(self, appointment_id):

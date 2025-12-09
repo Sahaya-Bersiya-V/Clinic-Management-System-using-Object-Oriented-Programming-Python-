@@ -22,7 +22,9 @@ CREATE TABLE IF NOT EXISTS patients (
     name VARCHAR(100) NOT NULL,
     age INT,
     gender VARCHAR(10),
-    contact VARCHAR(15)
+    contact VARCHAR(15),
+    blood_group VARCHAR(5),
+    address TEXT
 );
 
 CREATE TABLE IF NOT EXISTS appointments (
