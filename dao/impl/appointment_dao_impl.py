@@ -39,6 +39,49 @@ class AppointmentDAOImpl(AppointmentDAO):
         except Exception as e:
             raise e
 
+    def get_appointment_by_id(self, appointment_id):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM appointments WHERE appointment_id = %s"
+                cursor.execute(sql, (appointment_id,))
+                result = cursor.fetchone()
+                if result:
+                    return Appointment(
+                        appointment_id=result['appointment_id'],
+                        patient_id=result['patient_id'],
+                        doctor_id=result['doctor_id'],
+                        date=result['date'],
+                        status=result['status'],
+                        diagnosis=result['diagnosis'],
+                        prescription=result['prescription']
+                    )
+                return None
+        except Exception as e:
+            raise e
+
+    def get_appointments_by_patient(self, patient_id):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM appointments WHERE patient_id = %s"
+                cursor.execute(sql, (patient_id,))
+                results = cursor.fetchall()
+                appointments = []
+                for row in results:
+                    appointments.append(Appointment(
+                        appointment_id=row['appointment_id'],
+                        patient_id=row['patient_id'],
+                        doctor_id=row['doctor_id'],
+                        date=row['date'],
+                        status=row['status'],
+                        diagnosis=row['diagnosis'],
+                        prescription=row['prescription']
+                    ))
+                return appointments
+        except Exception as e:
+            raise e
+
     def get_all_appointments(self):
         connection = self.db_connection.get_connection()
         try:

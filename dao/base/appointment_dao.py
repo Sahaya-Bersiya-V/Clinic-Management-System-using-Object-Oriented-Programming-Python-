@@ -11,6 +11,14 @@ class AppointmentDAO(ABC):
         pass
 
     @abstractmethod
+    def get_appointments_by_patient(self, patient_id):
+        pass
+
+    @abstractmethod
+    def get_appointment_by_id(self, appointment_id):
+        pass
+
+    @abstractmethod
     def get_all_appointments(self):
         pass
     

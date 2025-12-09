@@ -9,16 +9,40 @@ class DoctorDashboard:
         while True:
             print(f"\n--- Doctor Dashboard ({self.user.get_username()}) ---")
             print("1. View Appointments")
-            print("2. Diagnose Patient")
-            print("3. Logout")
+            print("2. Record Consultation Notes")
+            print("3. Prescribe Medication")
+            print("4. Prescribe Lab Test")
+            print("5. View Patient Medical History")
+            print("6. Update Consultation Notes")
+            print("7. Approve Lab Test Report")
+            print("8. Recommend Follow-Up Appointment")
+            print("9. Generate Medical Certificate")
+            print("10. Mark Consultation as Completed")
+            print("11. Logout")
             
             choice = input("Enter choice: ").strip()
             
             if choice == '1':
                 self.view_appointments()
             elif choice == '2':
-                self.diagnose_patient()
+                self.record_consultation()
             elif choice == '3':
+                self.prescribe_medication()
+            elif choice == '4':
+                self.prescribe_lab_test()
+            elif choice == '5':
+                self.view_medical_history()
+            elif choice == '6':
+                self.record_consultation() # Same as record
+            elif choice == '7':
+                self.approve_lab_report()
+            elif choice == '8':
+                self.recommend_follow_up()
+            elif choice == '9':
+                self.generate_medical_certificate()
+            elif choice == '10':
+                self.complete_consultation()
+            elif choice == '11':
                 break
             else:
                 print("Invalid choice.")
@@ -39,14 +63,83 @@ class DoctorDashboard:
         except Exception as e:
             print(f"Error: {e}")
 
-    def diagnose_patient(self):
-        print("\n--- Diagnose Patient ---")
+    def record_consultation(self):
+        print("\n--- Record Consultation Notes ---")
         appt_id = input("Appointment ID: ").strip()
         diagnosis = input("Diagnosis: ").strip()
-        prescription = input("Prescription: ").strip()
-        
+        prescription = input("Prescription (Initial): ").strip()
         try:
-            self.service.diagnose_patient(appt_id, diagnosis, prescription)
-            print("Diagnosis added successfully.")
-        except Exception as e:
-            print(f"Error: {e}")
+            self.service.record_consultation(appt_id, diagnosis, prescription)
+            print("Consultation notes recorded.")
+        except Exception as e: print(f"Error: {e}")
+
+    def prescribe_medication(self):
+        print("\n--- Prescribe Medication ---")
+        appt_id = input("Appointment ID: ").strip()
+        med = input("Medication/Dosage: ").strip()
+        try:
+            self.service.prescribe_medication(appt_id, med)
+            print("Medication prescribed.")
+        except Exception as e: print(f"Error: {e}")
+
+    def prescribe_lab_test(self):
+        print("\n--- Prescribe Lab Test ---")
+        # Show tests
+        try:
+            tests = self.service.get_test_list()
+            print("Available Tests:", tests)
+            appt_id = input("Appointment ID: ").strip()
+            pid = input("Patient ID: ").strip()
+            tid = input("Test ID (Integer): ").strip()
+            self.service.prescribe_lab_test(appt_id, pid, tid)
+            print("Lab Test Prescribed.")
+        except Exception as e: print(f"Error: {e}")
+
+    def view_medical_history(self):
+        print("\n--- View Medical History ---")
+        pid = input("Patient ID: ").strip()
+        try:
+            history = self.service.view_medical_history(pid)
+            for h in history:
+                print(f"Date: {h.get_date()}, Diagnosis: {h.get_diagnosis()}, Rx: {h.get_prescription()}")
+        except Exception as e: print(f"Error: {e}")
+
+    def approve_lab_report(self):
+        print("\n--- Approve Lab Report ---")
+        rid = input("Lab Request ID: ").strip()
+        try:
+            self.service.approve_lab_test_report(rid)
+            print("Lab Report Approved.")
+        except Exception as e: print(f"Error: {e}")
+
+    def recommend_follow_up(self):
+        print("\n--- Recommend Follow-Up ---")
+        pid = input("Patient ID: ").strip()
+        did = input("Doctor ID: ").strip()
+        date = input("Date (YYYY-MM-DD): ").strip()
+        try:
+            self.service.recommend_follow_up(pid, did, date)
+            print("Follow-up Recommended (Appointment Created).")
+        except Exception as e: print(f"Error: {e}")
+
+    def generate_medical_certificate(self):
+        print("\n--- Generate Medical Certificate ---")
+        pid = input("Patient ID: ").strip()
+        diag = input("Diagnosis: ").strip()
+        days = input("Days of Rest: ").strip()
+        try:
+            cert = self.service.generate_medical_certificate(pid, diag, days)
+            print(cert)
+        except Exception as e: print(f"Error: {e}")
+
+    def complete_consultation(self):
+        print("\n--- Complete Consultation ---")
+        aid = input("Appointment ID: ").strip()
+        try:
+            self.service.mark_consultation_completed(aid)
+            print("Consultation Marked as Completed.")
+        except Exception as e: print(f"Error: {e}")
+
+    # Legacy alias ref
+    def diagnose_patient(self):
+        self.record_consultation()
