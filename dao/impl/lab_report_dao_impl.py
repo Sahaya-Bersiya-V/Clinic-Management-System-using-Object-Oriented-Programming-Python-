@@ -58,3 +58,65 @@ class LabReportDAOImpl(LabReportDAO):
                 return [row['test_name'] for row in results]
         except Exception as e:
             raise e
+
+    def add_lab_test(self, test_name, cost):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "INSERT INTO lab_tests (test_name, cost) VALUES (%s, %s)"
+                cursor.execute(sql, (test_name, cost))
+        except Exception as e:
+            raise e
+
+    def get_pending_requests(self):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = """
+                    SELECT lr.request_id, lr.patient_id, lt.test_name, lr.status, lr.report_date
+                    FROM lab_requests lr
+                    JOIN lab_tests lt ON lr.test_id = lt.test_id
+                    WHERE lr.status = 'Pending' OR lr.status = 'Processing'
+                """
+                cursor.execute(sql)
+                results = cursor.fetchall()
+                # Return list of specialized objects or dicts using existing models if possible.
+                # LabReport fits best for result view, LabRequest for status view. 
+                # Let's return list of dicts or loose objects for simplicity if Model doesn't perfectly fit or LabRequest is better.
+                # Using LabRequest but we need to fetch all fields to be pure. 
+                # Let's return dicts for now to be flexible or LabReport with status.
+                
+                # Using a dict representation for Dashboard display
+                requests = []
+                for row in results:
+                    requests.append({
+                        "request_id": row['request_id'],
+                        "patient_id": row['patient_id'],
+                        "test_name": row['test_name'],
+                        "status": row['status'],
+                        "date": row['report_date']
+                    })
+                return requests
+        except Exception as e:
+            raise e
+
+    def update_request_status(self, request_id, status):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "UPDATE lab_requests SET status = %s WHERE request_id = %s"
+                cursor.execute(sql, (status, request_id))
+        except Exception as e:
+            raise e
+
+    def update_test_result(self, request_id, result):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                # Also set date to today when correcting/uploading result? Yes.
+                import datetime
+                today = datetime.date.today()
+                sql = "UPDATE lab_requests SET result = %s, report_date = %s, status = 'Completed' WHERE request_id = %s"
+                cursor.execute(sql, (result, today, request_id))
+        except Exception as e:
+            raise e
