@@ -21,45 +21,6 @@
 | 2025-12-09 | 14:48:30 | `git push origin development`                                                                        | Pushed doctor service fix to development                                                   |
 | 2025-12-09 | 14:58:00 | `git add . && git commit -m "Enhance Pharmacist Module..."`                               | Implemented Pharmacist features (Inventory, Search, Alerts, etc.)                          |
 | 2025-12-09 | 14:58:30 | `git push origin development`                                                                        | Pushed Pharmacist enhancements to development                                              |
-
----
-
-### Git Log Dump (As of 2025-12-09 15:00)
-* 2245846 - (HEAD -> development, origin/development, origin/HEAD) Enhance Pharmacist Module with Inventory, Alerts, Search, and Discounts (4 minutes ago) <alcho-prof>
-* 33eec71 - Fix: Remove unused import of non-existent search module (18 minutes ago) <alcho-prof>
-* d98ebfa - Implemented Doctor module features: Consultation Notes, Medications, Labs, etc. (66 minutes ago) <alcho-prof>
-* 96eabaa - (team_lead_task) Stop tracking .agent directory and update gitignore (86 minutes ago) <alcho-prof>
-* e5060f4 - Implemented Receptionist features: Billing, Patient Search, Check-in, etc. and updated logs (88 minutes ago) <alcho-prof>
-* 0e85855 - Update git_records.txt with latest checkout resolution (2 hours ago) <alcho-prof>
-* 3a5a2bc - Update git_records.txt with latest push details (2 hours ago) <alcho-prof>
-* a60c30a - Implemented Admin staff/doctor management uses cases: Remove/Deactivate Staff, Update/Remove Doctor, View Doctor List (2 hours ago) <alcho-prof>
-*   82b84b9 - Merge branch 'development' of https://github.com/alcho-prof/CMS_ into team_lead_task (4 hours ago) <alcho-prof>
-|\  
-| *   2886be5 - Merge branch 'development' of https://github.com/alcho-prof/CMS_ into development (4 hours ago) <SahayaBersiya>
-| |\  
-| * | 96a7886 - Updated admin_dashboard.py (4 hours ago) <SahayaBersiya>
-* | | 2e6906c - Fix Bill generation bug and update logs (4 hours ago) <alcho-prof>
-| |/  
-|/|   
-* | 3fb250e - Update Medicine module with expiry and batch no, and add CHANGE_LOG.txt (4 hours ago) <alcho-prof>
-|/  
-| * f4ff6ca - (origin/bersi) Bersiya validation (23 hours ago) <SahayaBersiya>
-|/  
-*   43a5205 - Merge pull request #1 from alcho-prof/team_lead_task (26 hours ago) <sndy>
-|\  
-| *   2a1b126 - (origin/team_lead_task) Merge branch 'development' into team_lead_task (26 hours ago) <alcho-prof>
-| |\  
-| |/  
-|/|   
-* |   750910f - Merge branch 'development' of https://github.com/alcho-prof/CMS_ into development (10 days ago) <alcho-prof>
-|\ \  
-| * | 05c1b72 - Constructor Added (10 days ago) <vijay>
-* | | 2e6fd44 - hngdfjdy (10 days ago) <alcho-prof>
-|/ /  
-* |   6a8d919 - Merge branch 'development' of https://github.com/alcho-prof/Client_Management_System---v1 into development (10 days ago) <alcho-prof>
-|\ \  
-| * | 6d867dc - Initial commit (10 days ago) <sndy>
-|  /  
-| * 45920ed - Update codebase with latest changes and additions (26 hours ago) <alcho-prof>
-|/  
-* 54987ae - (production) First commit (10 days ago) <alcho-prof>
+| 2025-12-09 | 15:02:00 | `git add git_records.txt && git commit -m "Update git records..."`            | Updated git_records.txt with log dump (reverted in next step)                              |
+| 2025-12-09 | 15:02:30 | `git push origin development`                                                                        | Pushed updated records to development                                                      |
+| 2025-12-09 | 15:06:00 | `git add git_records.txt && git commit -m "Remove raw git log dump..."`       | Removed raw git log dump from records file as per user request                             |
