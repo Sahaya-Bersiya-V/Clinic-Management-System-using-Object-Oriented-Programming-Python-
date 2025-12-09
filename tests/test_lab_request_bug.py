@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from lib.services.doctor_service import DoctorService
 from dao.impl.patient_dao_impl import PatientDAOImpl
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
@@ -33,7 +37,7 @@ def test_bug():
         else:
             print(f"Found {len(tests)} tests.")
         
-        test_id = tests[0].get_test_id() if tests else 1
+        test_id = tests[0]['test_id'] if tests else 1
 
         # Test Prescribe Lab Request
         service = DoctorService()

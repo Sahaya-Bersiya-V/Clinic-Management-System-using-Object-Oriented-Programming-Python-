@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from lib.services.doctor_service import DoctorService
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
 from models.appointment import Appointment
