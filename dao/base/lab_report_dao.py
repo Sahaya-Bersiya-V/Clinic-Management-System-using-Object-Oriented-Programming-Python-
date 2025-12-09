@@ -9,3 +9,7 @@ class LabReportDAO(ABC):
     @abstractmethod
     def get_reports_by_patient(self, patient_id):
         pass
+
+    @abstractmethod
+    def get_all_tests(self):
+        pass

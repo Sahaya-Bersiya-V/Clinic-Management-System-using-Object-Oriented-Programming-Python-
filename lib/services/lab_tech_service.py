@@ -20,3 +20,6 @@ class LabTechService:
 
     def view_patient_reports(self, patient_id):
         return self.lab_report_dao.get_reports_by_patient(patient_id)
+
+    def get_available_tests(self):
+        return self.lab_report_dao.get_all_tests()

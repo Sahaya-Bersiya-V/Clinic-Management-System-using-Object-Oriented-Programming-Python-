@@ -6,13 +6,15 @@ class PharmacistService:
     def __init__(self):
         self.medicine_dao = MedicineDAOImpl()
 
-    def add_medicine(self, name, price, quantity):
+    def add_medicine(self, name, price, quantity, expiry_date, batch_no):
         err = Validators.validate_non_empty(name, "Medicine Name")
         if err: raise ValueError(err)
         if float(price) <= 0: raise ValueError("Price must be positive")
         if int(quantity) < 0: raise ValueError("Quantity cannot be negative")
+        if not expiry_date: raise ValueError("Expiry Date is required")
+        if not batch_no: raise ValueError("Batch No is required")
 
-        medicine = Medicine(name=name, price=price, quantity=quantity)
+        medicine = Medicine(name=name, price=price, quantity=quantity, expiry_date=expiry_date, batch_no=batch_no)
         return self.medicine_dao.create_medicine(medicine)
 
     def view_medicines(self):

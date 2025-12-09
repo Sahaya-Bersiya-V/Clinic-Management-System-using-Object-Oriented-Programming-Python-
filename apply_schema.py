@@ -27,6 +27,11 @@ def run_update():
                 try:
                     cursor.execute(statement)
                     print(f"Executed: {statement[:50]}...")
+                except pymysql.err.OperationalError as e:
+                    if e.args[0] == 1060:
+                        print(f"Skipped (Column already exists): {statement[:50]}...")
+                    else:
+                        print(f"Skipped/Error: {e}")
                 except Exception as e:
                     print(f"Skipped/Error: {e}")
                     
