@@ -10,11 +10,11 @@ def main():
     auth_service = AuthService()
 
     while True:
-        print("\n=== Clinic Management System ===")
-        print("="*70)
+        print("\n=========== Clinic Management System ===========")
+        print()
         print("1. Login")
         print("2. Exit")
-        print("="*70)
+        print("="*25)
         
         choice = input("Enter choice: ").strip()
         

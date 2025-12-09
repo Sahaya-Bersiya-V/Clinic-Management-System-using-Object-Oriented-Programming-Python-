@@ -63,3 +63,5 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   | management with role filtering.                   | 2. Replaced view_staff/view_doctors with view_staff_menu.
            |                                                   |                                                   | 3. Replaced update/remove_doctor with update_staff_menu.
 2025-12-09 | Added Shift Update for Staff                    | Needed ability to change shift timings.           | 1. Updated AdminDashboard.update_staff_menu to prompt for shifts.
+2025-12-09 | Enhanced Appointment Booking                  | User needed confirmation of patient identity.     | 1. Updated ReceptionistService with get_patient_details.
+           |                                                   |                                                   | 2. Updated ReceptionistDashboard to show Name/Contact.
