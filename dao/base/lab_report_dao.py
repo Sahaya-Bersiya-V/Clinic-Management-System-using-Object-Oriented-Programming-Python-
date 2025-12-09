@@ -11,5 +11,17 @@ class LabReportDAO(ABC):
         pass
 
     @abstractmethod
-    def get_all_tests(self):
+    def add_lab_test(self, test_name, cost):
+        pass
+
+    @abstractmethod
+    def get_pending_requests(self):
+        pass
+
+    @abstractmethod
+    def update_request_status(self, request_id, status):
+        pass
+
+    @abstractmethod
+    def update_test_result(self, request_id, result):
         pass

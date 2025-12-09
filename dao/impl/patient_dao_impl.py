@@ -10,8 +10,8 @@ class PatientDAOImpl(PatientDAO):
         connection = self.db_connection.get_connection()
         try:
             with connection.cursor() as cursor:
-                sql = "INSERT INTO patients (name, age, gender, contact) VALUES (%s, %s, %s, %s)"
-                cursor.execute(sql, (patient.get_name(), patient.get_age(), patient.get_gender(), patient.get_contact()))
+                sql = "INSERT INTO patients (name, age, gender, contact, blood_group, address) VALUES (%s, %s, %s, %s, %s, %s)"
+                cursor.execute(sql, (patient.get_name(), patient.get_age(), patient.get_gender(), patient.get_contact(), patient.get_blood_group(), patient.get_address()))
                 patient.set_patient_id(cursor.lastrowid)
                 return patient
         except Exception as e:
@@ -30,7 +30,9 @@ class PatientDAOImpl(PatientDAO):
                         name=result['name'],
                         age=result['age'],
                         gender=result['gender'],
-                        contact=result['contact']
+                        contact=result['contact'],
+                        blood_group=result['blood_group'],
+                        address=result['address']
                     )
                 return None
         except Exception as e:
@@ -50,7 +52,9 @@ class PatientDAOImpl(PatientDAO):
                         name=row['name'],
                         age=row['age'],
                         gender=row['gender'],
-                        contact=row['contact']
+                        contact=row['contact'],
+                        blood_group=row['blood_group'],
+                        address=row['address']
                     ))
                 return patients
         except Exception as e:
@@ -60,8 +64,8 @@ class PatientDAOImpl(PatientDAO):
         connection = self.db_connection.get_connection()
         try:
             with connection.cursor() as cursor:
-                sql = "UPDATE patients SET name=%s, age=%s, gender=%s, contact=%s WHERE patient_id=%s"
-                cursor.execute(sql, (patient.get_name(), patient.get_age(), patient.get_gender(), patient.get_contact(), patient.get_patient_id()))
+                sql = "UPDATE patients SET name=%s, age=%s, gender=%s, contact=%s, blood_group=%s, address=%s WHERE patient_id=%s"
+                cursor.execute(sql, (patient.get_name(), patient.get_age(), patient.get_gender(), patient.get_contact(), patient.get_blood_group(), patient.get_address(), patient.get_patient_id()))
         except Exception as e:
             raise e
 
@@ -80,7 +84,9 @@ class PatientDAOImpl(PatientDAO):
                         name=row['name'],
                         age=row['age'],
                         gender=row['gender'],
-                        contact=row['contact']
+                        contact=row['contact'],
+                        blood_group=row['blood_group'],
+                        address=row['address']
                     ))
                 return patients
         except Exception as e:
