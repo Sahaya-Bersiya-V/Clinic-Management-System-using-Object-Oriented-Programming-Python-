@@ -11,7 +11,14 @@ class ReceptionistDashboard:
             print("1. Register Patient")
             print("2. Book Appointment")
             print("3. View All Patients")
-            print("4. Logout")
+            print("4. Generate Consultation Billing")
+            print("5. Update Patient Details")
+            print("6. Cancel Appointment")
+            print("7. Search Patient Record")
+            print("8. Print Billing Receipt")
+            print("9. Check Doctor Availability")
+            print("10. Patient Check-in")
+            print("11. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -22,6 +29,20 @@ class ReceptionistDashboard:
             elif choice == '3':
                 self.view_patients()
             elif choice == '4':
+                self.generate_bill()
+            elif choice == '5':
+                self.update_patient()
+            elif choice == '6':
+                self.cancel_appointment()
+            elif choice == '7':
+                self.search_patient()
+            elif choice == '8':
+                self.print_receipt()
+            elif choice == '9':
+                self.check_doctor_availability()
+            elif choice == '10':
+                self.check_in_patient()
+            elif choice == '11':
                 break
             else:
                 print("Invalid choice.")
@@ -59,3 +80,75 @@ class ReceptionistDashboard:
                 print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")
+
+    def generate_bill(self):
+        print("\n--- Generate Bill ---")
+        try:
+            pid = input("Patient ID: ")
+            aid = input("Appointment ID: ")
+            total = input("Total Amount: ")
+            discount = input("Discount: ")
+            bill = self.service.generate_bill(pid, aid, total, discount)
+            print(f"Bill Generated! ID: {bill.get_bill_id()}, Final Amount: {bill.get_final_amount()}")
+        except Exception as e: print(f"Error: {e}")
+
+    def update_patient(self):
+        print("\n--- Update Patient ---")
+        try:
+            pid = input("Patient ID: ")
+            name = input("New Name: ")
+            age = input("New Age: ")
+            gender = input("New Gender: ")
+            contact = input("New Contact: ")
+            self.service.update_patient_details(pid, name, age, gender, contact)
+            print("Patient Details Updated.")
+        except Exception as e: print(f"Error: {e}")
+
+    def cancel_appointment(self):
+        print("\n--- Cancel Appointment ---")
+        try:
+            aid = input("Appointment ID: ")
+            self.service.cancel_appointment(aid)
+            print("Appointment Cancelled.")
+        except Exception as e: print(f"Error: {e}")
+
+    def search_patient(self):
+        print("\n--- Search Patient ---")
+        try:
+            query = input("Enter Name or Contact: ")
+            patients = self.service.search_patient_record(query)
+            for p in patients:
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
+        except Exception as e: print(f"Error: {e}")
+
+    def print_receipt(self):
+        print("\n--- Print Receipt ---")
+        try:
+            bid = input("Bill ID: ")
+            bill = self.service.get_bill_receipt(bid)
+            if bill:
+                print(f"Receipt:\nBill ID: {bill.get_bill_id()}\nPatient ID: {bill.get_patient_id()}\nAmount: {bill.get_final_amount()}\nDate: {bill.get_date()}")
+            else:
+                print("Bill not found.")
+        except Exception as e: print(f"Error: {e}")
+
+    def check_doctor_availability(self):
+        print("\n--- Check Doctor Availability ---")
+        try:
+            did = input("Doctor ID: ")
+            apps = self.service.check_doctor_availability(did)
+            if not apps:
+                print("Doctor has no appointments.")
+            else:
+                print(f"Appointments for Doctor {did}:")
+                for a in apps:
+                    print(f"ID: {a.get_appointment_id()}, Date: {a.get_date()}, Status: {a.get_status()}")
+        except Exception as e: print(f"Error: {e}")
+
+    def check_in_patient(self):
+        print("\n--- Check In Patient ---")
+        try:
+            aid = input("Appointment ID: ")
+            self.service.check_in_patient(aid)
+            print("Patient Checked In.")
+        except Exception as e: print(f"Error: {e}")

@@ -64,3 +64,24 @@ class PatientDAOImpl(PatientDAO):
                 cursor.execute(sql, (patient.get_name(), patient.get_age(), patient.get_gender(), patient.get_contact(), patient.get_patient_id()))
         except Exception as e:
             raise e
+
+    def search_patients(self, query):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM patients WHERE name LIKE %s OR contact LIKE %s"
+                like_query = f"%{query}%"
+                cursor.execute(sql, (like_query, like_query))
+                results = cursor.fetchall()
+                patients = []
+                for row in results:
+                    patients.append(Patient(
+                        patient_id=row['patient_id'],
+                        name=row['name'],
+                        age=row['age'],
+                        gender=row['gender'],
+                        contact=row['contact']
+                    ))
+                return patients
+        except Exception as e:
+            raise e

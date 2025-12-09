@@ -24,3 +24,25 @@ class BillDAOImpl(BillDAO):
                 return bill
         except Exception as e:
             raise e
+
+    def get_bill_by_id(self, bill_id):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM bills WHERE bill_id = %s"
+                cursor.execute(sql, (bill_id,))
+                result = cursor.fetchone()
+                if result:
+                    return Bill(
+                        bill_id=result['bill_id'],
+                        patient_id=result['patient_id'],
+                        appointment_id=result['appointment_id'],
+                        total_amount=result['total_amount'],
+                        discount=result['discount'],
+                        final_amount=result['final_amount'],
+                        status=result['status'],
+                        date=result['date']
+                    )
+                return None
+        except Exception as e:
+            raise e

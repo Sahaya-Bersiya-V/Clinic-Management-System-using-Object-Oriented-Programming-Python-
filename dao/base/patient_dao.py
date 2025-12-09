@@ -17,3 +17,7 @@ class PatientDAO(ABC):
     @abstractmethod
     def update_patient(self, patient):
         pass
+
+    @abstractmethod
+    def search_patients(self, query):
+        pass
