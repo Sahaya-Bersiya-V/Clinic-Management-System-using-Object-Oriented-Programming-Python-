@@ -116,3 +116,6 @@ class DoctorService:
 
     def get_test_list(self):
         return self.lab_report_dao.get_all_tests()
+
+    def get_appointment_details(self, appointment_id):
+        return self.appointment_dao.get_appointment_by_id(appointment_id)

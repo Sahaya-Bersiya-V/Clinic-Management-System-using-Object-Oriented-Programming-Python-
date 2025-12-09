@@ -64,14 +64,33 @@ class DoctorDashboard:
             print(f"Error: {e}")
 
     def record_consultation(self):
-        print("\n--- Record Consultation Notes ---")
+        print("\n--- Record/Update Consultation Notes ---")
         appt_id = input("Appointment ID: ").strip()
-        diagnosis = input("Diagnosis: ").strip()
-        prescription = input("Prescription (Initial): ").strip()
+        
         try:
+            appt = self.service.get_appointment_details(appt_id)
+            if not appt:
+                print("Appointment not found.")
+                return
+                
+            print(f"Patient ID: {appt.get_patient_id()}")
+            print(f"Date: {appt.get_date()}")
+            
+            # Show current
+            curr_diag = appt.get_diagnosis() or ""
+            curr_rx = appt.get_prescription() or ""
+            
+            print(f"Current Diagnosis: {curr_diag}")
+            diagnosis = input(f"New Diagnosis (Enter to keep): ").strip() or curr_diag
+            
+            print(f"Current Prescription (Text Note): {curr_rx}")
+            prescription = input(f"New Prescription (Enter to keep): ").strip() or curr_rx
+            
             self.service.record_consultation(appt_id, diagnosis, prescription)
-            print("Consultation notes recorded.")
-        except Exception as e: print(f"Error: {e}")
+            print("Consultation notes updated.")
+            
+        except Exception as e:
+            print(f"Error: {e}")
 
     def prescribe_medication(self):
         print("\n--- Prescribe Medication ---")
