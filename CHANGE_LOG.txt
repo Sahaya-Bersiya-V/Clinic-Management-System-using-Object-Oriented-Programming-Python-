@@ -24,3 +24,9 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   |                                                   | 3. Updated DoctorService: Added Consultation, Medication,
            |                                                   |                                                   |    Lab Test, History, Follow-up, Certificate, Completion.
            |                                                   |                                                   | 4. Updated DoctorDashboard: Added menu options.
+2025-12-09 | Enhanced Pharmacist Module Features             | To support full pharmacy workflow including       | 1. Updated MedicineDAO: Added update, search, low stock, expiry.
+           |                                                   | inventory, tracking, and returning patient perks. | 2. Updated PharmacistService: Implemented new inventory logic,
+           |                                                   |                                                   |    prescriptions view, and returning patient discount check.
+           |                                                   |                                                   | 3. Updated PharmacistDashboard: Added UI for search, update,
+           |                                                   |                                                   |    alerts, and prescriptions.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
