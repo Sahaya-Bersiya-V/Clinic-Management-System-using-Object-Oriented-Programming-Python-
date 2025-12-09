@@ -28,6 +28,8 @@ class ReceptionistService:
         if err: raise ValueError(err)
         err = Validators.validate_id(doctor_id)
         if err: raise ValueError(err)
+        err = Validators.validate_future_date(date)
+        if err: raise ValueError(err)
         
         appointment = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Scheduled")
         return self.appointment_dao.create_appointment(appointment)

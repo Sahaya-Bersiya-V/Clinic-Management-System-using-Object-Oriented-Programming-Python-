@@ -44,3 +44,14 @@ class Validators:
         if not value or not str(value).strip():
             return f"{field_name} cannot be empty."
         return None
+
+    @staticmethod
+    def validate_future_date(date_str):
+        from datetime import datetime
+        try:
+            input_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            if input_date < datetime.now().date():
+                return "Date cannot be in the past."
+            return None
+        except ValueError:
+            return "Invalid date format. Use YYYY-MM-DD."
