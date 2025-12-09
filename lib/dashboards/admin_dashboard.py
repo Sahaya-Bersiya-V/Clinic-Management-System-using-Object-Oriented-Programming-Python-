@@ -74,8 +74,18 @@ class AdminDashboard:
             print("Password must be at least 4 characters long.")
             return
 
+        # ------- Additional Details -------
+        specialization = None
+        if role == 'doctor':
+             specialization = input("Specialization: ").strip()
+        else:
+             specialization = input("Specialization (Optional): ").strip() or None
+
+        shift_start = input("Shift Start (HH:MM:SS, Optional): ").strip() or None
+        shift_end = input("Shift End (HH:MM:SS, Optional): ").strip() or None
+
         try:
-            self.service.add_staff(name, role, contact, username, password)
+            self.service.add_staff(name, role, contact, username, password, specialization, shift_start, shift_end)
             print("Staff added successfully.")
         except Exception as e:
             print(f"Error: {e}")
