@@ -35,3 +35,13 @@ class UserDAOImpl(UserDAO):
                 return user
         except Exception as e:
             raise e
+
+    def update_user_status(self, user_id, is_active):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "UPDATE users SET is_active = %s WHERE user_id = %s"
+                cursor.execute(sql, (is_active, user_id))
+        except Exception as e:
+            raise e
+
