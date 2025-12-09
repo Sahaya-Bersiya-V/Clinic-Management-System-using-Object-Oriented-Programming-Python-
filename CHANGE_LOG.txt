@@ -1,4 +1,10 @@
-2025-12-09 - Added Expiry Date and Batch No to Medicine Module - User requested to capture expiry date and batch number for medicines as they were previously missing from the system. - 1. Updated `schema.sql` to add `expiry_date` and `batch_no` columns to `medicines` table.
-2. Updated `dao/impl/medicine_dao_impl.py` to include these fields in `create_medicine` (INSERT) and `get_all_medicines` (SELECT) methods.
-3. Updated `lib/services/pharmacist_service.py` to accept, validate, and pass `expiry_date` and `batch_no` in `add_medicine`.
-4. Updated `lib/dashboards/pharmacist_dashboard.py` to prompt user for inputs and display these fields in the medicine list.
+Date       | Changes Made                                      | Why We Made It                                    | What We Done to Change It
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-09 | Added Expiry Date and Batch No to Medicine Module | User inputs for these critical fields were missing| 1. Updated schema.sql (medicines table).
+           |                                                   | causing incomplete records.                       | 2. Updated MedicineDAO (create/get methods).
+           |                                                   |                                                   | 3. Updated PharmacistService (validate/add).
+           |                                                   |                                                   | 4. Updated PharmacistDashboard (prompt inputs).
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-09 | Fixed Bill Generation Inputs & Logic              | Console failed to ask for patient, appointment,   | 1. Created BillDAO and BillDAOImpl.
+           |                                                   | discount, etc. bug fix.                           | 2. Updated PharmacistService to create/save Bill.
+           |                                                   |                                                   | 3. Updated PharmacistDashboard to ask for missing fields.

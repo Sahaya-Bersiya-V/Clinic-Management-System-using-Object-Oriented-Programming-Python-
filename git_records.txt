@@ -1,0 +1,6 @@
+| Date       | Time     | Command                                                                                             | Description                                                                 |
+|------------|----------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| 2025-12-09 | 10:41:20 | `git status && git branch`                                                                         | Checked current status and active branch (team_lead_task)                   |
+| 2025-12-09 | 10:41:25 | `git add . && git commit -m "Update Medicine module with expiry and batch no, and add CHANGE_LOG.txt"` | Committed medicine module updates and new change log to team_lead_task      |
+| 2025-12-09 | 10:41:30 | `git checkout development && git merge team_lead_task`                                              | Switched to development branch and merged team_lead_task changes (Fast-forward)|
+| 2025-12-09 | 10:41:35 | `git push origin development`                                                                       | Pushed updated development branch to remote repository                      |

@@ -1,10 +1,13 @@
 from dao.impl.medicine_dao_impl import MedicineDAOImpl
+from dao.impl.bill_dao_impl import BillDAOImpl
 from models.medicine import Medicine
+from models.bill import Bill
 from validation.validators import Validators
 
 class PharmacistService:
     def __init__(self):
         self.medicine_dao = MedicineDAOImpl()
+        self.bill_dao = BillDAOImpl()
 
     def add_medicine(self, name, price, quantity, expiry_date, batch_no):
         err = Validators.validate_non_empty(name, "Medicine Name")
@@ -20,9 +23,7 @@ class PharmacistService:
     def view_medicines(self):
         return self.medicine_dao.get_all_medicines()
 
-    def generate_bill(self, medicine_id, quantity):
-        # This would involve checking stock and calculating price.
-        # For simplicity, we'll just update stock and return cost.
+    def generate_bill(self, medicine_id, quantity, patient_id, appointment_id, discount, status, date):
         medicines = self.medicine_dao.get_all_medicines()
         target_med = None
         for med in medicines:
@@ -37,4 +38,19 @@ class PharmacistService:
             raise ValueError("Insufficient stock")
             
         self.medicine_dao.update_medicine_stock(medicine_id, quantity)
-        return target_med.get_price() * int(quantity)
+        total_amount = float(target_med.get_price()) * int(quantity)
+        final_amount = total_amount - float(discount or 0)
+        
+        # Handle optional appointment_id
+        app_id = int(appointment_id) if appointment_id else None
+
+        bill = Bill(
+            patient_id=int(patient_id),
+            appointment_id=app_id,
+            total_amount=total_amount,
+            discount=float(discount or 0),
+            final_amount=final_amount,
+            status=status or 'Unpaid',
+            date=date
+        )
+        return self.bill_dao.create_bill(bill)
