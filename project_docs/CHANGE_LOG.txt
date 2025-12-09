@@ -67,3 +67,4 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   |                                                   | 2. Updated ReceptionistDashboard to show Name/Contact.
 2025-12-09 | Fixed Appointment Date Validation Bug           | Appointments could be booked in the past.         | 1. Updated Validators with validate_future_date.
            |                                                   |                                                   | 2. Updated ReceptionistService/DoctorService to validate date.
+2025-12-09 | Enhanced Booking UX                         | Confirmation step needed.                         | Added confirmation prompt in ReceptionistDashboard.book_appointment.

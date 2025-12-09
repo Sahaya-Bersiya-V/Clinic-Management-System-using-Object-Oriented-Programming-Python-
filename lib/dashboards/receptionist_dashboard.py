@@ -73,6 +73,12 @@ class ReceptionistDashboard:
                 print("Patient not found. Please register first.")
                 return
             print(f"Booking for: {patient.get_name()} | Contact: {patient.get_contact()}")
+            
+            confirm = input("Confirm patient details? (y/n): ").strip().lower()
+            if confirm != 'y':
+                print("Booking cancelled.")
+                return
+
         except Exception as e:
             print(f"Error fetching patient: {e}")
             return
