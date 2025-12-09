@@ -57,14 +57,20 @@ class ReceptionistDashboard:
         address = input("Address: ").strip()
         
         try:
-            self.service.register_patient(name, age, gender, contact, blood_group, address)
-            print("Patient registered successfully.")
+            patient = self.service.register_patient(name, age, gender, contact, blood_group, address)
+            print(f"Patient registered successfully. New Patient ID: {patient.get_patient_id()}")
+            
+            book_now = input("Book appointment for this patient now? (y/n): ").strip().lower()
+            if book_now == 'y':
+                self.book_appointment(patient_id=str(patient.get_patient_id()))
+                
         except Exception as e:
             print(f"Error: {e}")
 
-    def book_appointment(self):
+    def book_appointment(self, patient_id=None):
         print("\n--- Book Appointment ---")
-        patient_id = input("Patient ID: ").strip()
+        if not patient_id:
+            patient_id = input("Patient ID: ").strip()
         
         # Fetch and show patient details first
         try:
@@ -73,6 +79,12 @@ class ReceptionistDashboard:
                 print("Patient not found. Please register first.")
                 return
             print(f"Booking for: {patient.get_name()} | Contact: {patient.get_contact()}")
+            
+            confirm = input("Confirm patient details? (y/n): ").strip().lower()
+            if confirm != 'y':
+                print("Booking cancelled.")
+                return
+
         except Exception as e:
             print(f"Error fetching patient: {e}")
             return

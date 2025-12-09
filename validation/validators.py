@@ -44,3 +44,29 @@ class Validators:
         if not value or not str(value).strip():
             return f"{field_name} cannot be empty."
         return None
+
+    @staticmethod
+    def validate_future_date(date_str):
+        from datetime import datetime
+        try:
+            input_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            if input_date < datetime.now().date():
+                return "Date cannot be in the past."
+            return None
+        except ValueError:
+            return "Invalid date format. Use YYYY-MM-DD."
+    @staticmethod
+    def validate_age(age):
+        if not age or not str(age).strip():
+            return "Age cannot be empty."
+        if not str(age).isdigit() or int(age) <= 0 or int(age) > 120:
+             return "Age must be a valid positive number (1-120)."
+        return None
+
+    @staticmethod
+    def validate_gender(gender):
+        if not gender or not gender.strip():
+            return "Gender cannot be empty."
+        if gender.upper() not in ['M', 'F', 'OTHER', 'MALE', 'FEMALE']:
+            return "Gender must be M, F, or Other."
+        return None

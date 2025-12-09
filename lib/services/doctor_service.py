@@ -149,6 +149,9 @@ class DoctorService:
         Context: Called by DoctorDashboard.recommend_follow_up.
         Calls: AppointmentDAOImpl.create_appointment
         """
+        err = Validators.validate_future_date(date)
+        if err: raise ValueError(err)
+
         appt = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Follow-Up Recommended")
         return self.appointment_dao.create_appointment(appt)
 
