@@ -135,3 +135,6 @@ class PharmacistService:
 
     def get_current_staff_profile(self, user_id):
         return self.staff_dao.get_staff_by_user_id(user_id)
+
+    def get_all_patients(self):
+        return self.patient_dao.get_all_patients()

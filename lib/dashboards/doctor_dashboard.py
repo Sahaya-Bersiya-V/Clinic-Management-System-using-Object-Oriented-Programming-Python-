@@ -43,7 +43,8 @@ class DoctorDashboard:
             print("8. Recommend Follow-Up Appointment")
             print("9. Generate Medical Certificate")
             print("10. Mark Consultation as Completed")
-            print("11. Logout")
+            print("11. View Patient List (ID Lookup)")
+            print("12. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -68,6 +69,8 @@ class DoctorDashboard:
             elif choice == '10':
                 self.complete_consultation()
             elif choice == '11':
+                self.view_patient_list()
+            elif choice == '12':
                 break
             else:
                 print("Invalid choice.")
@@ -262,3 +265,15 @@ class DoctorDashboard:
         Calls: self.record_consultation
         """
         self.record_consultation()
+
+    def view_patient_list(self):
+        print("\n--- Patient List ---")
+        try:
+            patients = self.service.get_all_patients()
+            if not patients:
+                print("No patients found.")
+            else:
+                 for p in patients:
+                    print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")

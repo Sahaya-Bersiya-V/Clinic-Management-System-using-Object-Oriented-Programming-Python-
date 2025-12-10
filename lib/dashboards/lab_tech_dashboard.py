@@ -31,7 +31,8 @@ class LabTechDashboard:
             print("3. Manage Lab Tests (Catalog)")
             print("4. View Pending Requests & Update Status")
             print("5. Re-upload/Correct Lab Report")
-            print("6. Logout")
+            print("6. View Patient List (ID Lookup)")
+            print("7. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -46,6 +47,8 @@ class LabTechDashboard:
             elif choice == '5':
                 self.correct_report_ui()
             elif choice == '6':
+                 self.view_patient_list()
+            elif choice == '7':
                 break
             else:
                 print("Invalid choice.")
@@ -137,3 +140,15 @@ class LabTechDashboard:
             print("Report updated and notified (status set to Completed).")
         except Exception as e:
              print(f"Error: {e}")
+
+    def view_patient_list(self):
+        print("\n--- Patient List ---")
+        try:
+            patients = self.service.get_all_patients()
+            if not patients:
+                print("No patients found.")
+            else:
+                 for p in patients:
+                    print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")

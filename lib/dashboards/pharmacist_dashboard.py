@@ -34,7 +34,8 @@ class PharmacistDashboard:
             print("6. Check Low Stock")
             print("7. Check Expiry Tracking")
             print("8. View Prescriptions")
-            print("9. Logout")
+            print("9. View Patient List (ID Lookup)")
+            print("10. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -55,6 +56,8 @@ class PharmacistDashboard:
             elif choice == '8':
                 self.view_prescriptions_ui()
             elif choice == '9':
+                self.view_patient_list()
+            elif choice == '10':
                 break
             else:
                 print("Invalid choice.")
@@ -171,5 +174,17 @@ class PharmacistDashboard:
             print(f"Total Amount: {bill.get_total_amount()}")
             print(f"Discount: {bill.get_discount()}")
             print(f"Final Amount: {bill.get_final_amount()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def view_patient_list(self):
+        print("\n--- Patient List ---")
+        try:
+            patients = self.service.get_all_patients()
+            if not patients:
+                print("No patients found.")
+            else:
+                 for p in patients:
+                    print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")

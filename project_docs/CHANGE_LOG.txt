@@ -138,3 +138,6 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   |                                                   | 3. Pharmacist: Added list/search medicine helper.
            |                                                   |                                                   | 4. Lab Tech: Added list request helper.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added 'View Patient List' to Dashboards       | User requested 'View ID and Details' option.      | 1. Updated Doctor, Pharmacist, LabTech Services & Dashboards.
+           |                                                   |                                                   | 2. Added explicit menu option to list all patients.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
