@@ -104,3 +104,6 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   | (only lab_requests). User expected both.          | 2. Updated LabReportDAOImpl.update_test_result.
            |                                                   |                                                   | 3. Added INSERT logic to populate lab_reports.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Pharmacist Bill Status Validation       | System accepted random strings as status.         | 1. Updated PharmacistService.generate_bill.
+           |                                                   | Expected only "Paid" or "Unpaid".                 | 2. Added validation check for status inputs.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
