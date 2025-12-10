@@ -110,3 +110,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Created Project Workflow Documentation        | User requested a high-level overview of all       | 1. Created project_docs/PROJECT_WORKFLOW.md.
            |                                                   | module workflows.                                 | 2. Documented end-to-end flows for all roles.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Follow-up Status Length Bug             | DB error: "Follow-Up Recommended" > status(20)    | 1. Updated DoctorService.recommend_follow_up.
+           |                                                   | limit.                                            | 2. Changed status to "Follow-Up".
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

@@ -152,7 +152,7 @@ class DoctorService:
         err = Validators.validate_future_date(date)
         if err: raise ValueError(err)
 
-        appt = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Follow-Up Recommended")
+        appt = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Follow-Up")
         return self.appointment_dao.create_appointment(appt)
 
     def generate_medical_certificate(self, patient_id, diagnosis, days_rest):
