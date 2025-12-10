@@ -18,7 +18,8 @@ class ReceptionistDashboard:
             print("8. Print Billing Receipt")
             print("9. Check Doctor Availability")
             print("10. Patient Check-in")
-            print("11. Logout")
+            print("11. View Booked Appointments")
+            print("12. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -43,6 +44,8 @@ class ReceptionistDashboard:
             elif choice == '10':
                 self.check_in_patient()
             elif choice == '11':
+                self.view_appointments()
+            elif choice == '12':
                 break
             else:
                 print("Invalid choice.")
@@ -180,3 +183,15 @@ class ReceptionistDashboard:
             self.service.check_in_patient(aid)
             print("Patient Checked In.")
         except Exception as e: print(f"Error: {e}")
+
+    def view_appointments(self):
+        print("\n--- Booked Appointments ---")
+        try:
+            appointments = self.service.get_all_appointments()
+            if not appointments:
+                print("No appointments found.")
+            else:
+                for a in appointments:
+                    print(f"ID: {a.get_appointment_id()}, Patient ID: {a.get_patient_id()}, Doctor ID: {a.get_doctor_id()}, Date: {a.get_date()}, Status: {a.get_status()}")
+        except Exception as e:
+            print(f"Error: {e}")

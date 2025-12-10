@@ -73,3 +73,12 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-09 | Enhanced Patient Validation                 | Invalid input (e.g. Contact=9) was accepted.      | 1. Updated Validators (added Age, Gender rules).
            |                                                   |                                                   | 2. Updated ReceptionistService to enforce them.
 2025-12-09 | Enhanced Date Validation                    | Past dates were allowed for new medications.      | 1. Updated PharmacistService.add_medicine w/ Future validator.
+2025-12-10 | Added View Appointments Feature               | User couldn't see appointment IDs for check-in.   | 1. Updated ReceptionistService (added get_all_appointments).
+           |                                                   | Trying ID 1 resulted in error.                    | 2. Updated ReceptionistDashboard (added View menu & display).
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Blood Group Validation Bug            | User could enter valid but nonsensical blood      | 1. Updated Validators: Added validate_blood_group.
+           |                                                   | groups (e.g. 'g').                                | 2. Updated ReceptionistService: Added check to register/update.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Patient Update Bug                      | Entering empty fields during update wiped         | 1. Updated ReceptionistService.update_patient_details.
+           |                                                   | existing data.                                    | 2. Added checks to only update if input is non-empty.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

@@ -24,7 +24,7 @@ class ReceptionistService:
         if err: raise ValueError(err)
         
         # Additional checks for fields not covered by specific validators but shouldn't be empty
-        err = Validators.validate_non_empty(blood_group, "Blood Group")
+        err = Validators.validate_blood_group(blood_group)
         if err: raise ValueError(err)
         err = Validators.validate_non_empty(address, "Address")
         if err: raise ValueError(err)
@@ -42,6 +42,9 @@ class ReceptionistService:
         
         appointment = Appointment(patient_id=patient_id, doctor_id=doctor_id, date=date, status="Scheduled")
         return self.appointment_dao.create_appointment(appointment)
+
+    def get_all_appointments(self):
+        return self.appointment_dao.get_all_appointments()
     
     def get_all_patients(self):
         return self.patient_dao.get_all_patients()
@@ -62,12 +65,26 @@ class ReceptionistService:
     def update_patient_details(self, patient_id, name, age, gender, contact, blood_group, address):
         patient = self.patient_dao.get_patient_by_id(patient_id)
         if not patient: raise ValueError("Patient not found")
-        patient.set_name(name)
-        patient.set_age(age)
-        patient.set_gender(gender)
-        patient.set_contact(contact)
-        patient.set_blood_group(blood_group)
-        patient.set_address(address)
+        
+        if name and name.strip(): patient.set_name(name)
+        if age and age.strip():
+             err = Validators.validate_age(age)
+             if err: raise ValueError(err)
+             patient.set_age(age)
+        if gender and gender.strip():
+             err = Validators.validate_gender(gender)
+             if err: raise ValueError(err)
+             patient.set_gender(gender)
+        if contact and contact.strip():
+             err = Validators.validate_phone(contact)
+             if err: raise ValueError(err)
+             patient.set_contact(contact)
+        if blood_group and blood_group.strip():
+             err = Validators.validate_blood_group(blood_group)
+             if err: raise ValueError(err)
+             patient.set_blood_group(blood_group)
+        if address and address.strip(): patient.set_address(address)
+        
         self.patient_dao.update_patient(patient)
 
     def cancel_appointment(self, appointment_id):
