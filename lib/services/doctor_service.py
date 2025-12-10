@@ -3,6 +3,7 @@ from dao.impl.lab_request_dao_impl import LabRequestDAOImpl
 from dao.impl.lab_report_dao_impl import LabReportDAOImpl
 from dao.impl.prescription_dao_impl import PrescriptionDAOImpl
 from dao.impl.medicine_dao_impl import MedicineDAOImpl
+from dao.impl.patient_dao_impl import PatientDAOImpl
 from models.appointment import Appointment
 from models.lab_request import LabRequest
 from models.prescription import Prescription
@@ -15,6 +16,7 @@ class DoctorService:
         self.lab_report_dao = LabReportDAOImpl()
         self.prescription_dao = PrescriptionDAOImpl()
         self.medicine_dao = MedicineDAOImpl()
+        self.patient_dao = PatientDAOImpl()
 
     def get_appointments(self, doctor_id):
         """
@@ -159,9 +161,34 @@ class DoctorService:
         """
         Purpose: Generates a text string representing a medical certificate.
         Context: Called by DoctorDashboard.generate_medical_certificate.
-        Calls: None (String formatting only)
+        Calls: PatientDAO.get_patient_by_id
         """
-        return f"MEDICAL CERTIFICATE\nTo whom it may concern,\nPatient ID {patient_id} is diagnosed with {diagnosis} and is recommended {days_rest} days of rest."
+        # Validate ID
+        err = Validators.validate_id(patient_id)
+        if err: raise ValueError(f"Invalid Patient ID: {err}")
+        
+        # Validate Days
+        if not str(days_rest).isdigit() or int(days_rest) <= 0:
+            raise ValueError("Days of rest must be a positive number.")
+
+        # Fetch Patient Data
+        patient = self.patient_dao.get_patient_by_id(patient_id)
+        if not patient:
+            raise ValueError(f"Patient with ID {patient_id} not found.")
+
+        # Generate Certificate
+        return (
+            "========================================\n"
+            "          MEDICAL CERTIFICATE           \n"
+            "========================================\n"
+            f"To whom it may concern,\n\n"
+            f"This is to certify that Mr./Ms. {patient.get_name()} (Age: {patient.get_age()})\n"
+            f"Patient ID: {patient_id}\n"
+            f"has been under my care and is diagnosed with: {diagnosis}.\n\n"
+            f"Recommendation: {days_rest} days of rest is advised for recovery.\n\n"
+            "Doctor Signature: __________________\n"
+            "========================================"
+        )
 
     def mark_consultation_completed(self, appointment_id):
         """
