@@ -70,3 +70,10 @@ class Validators:
         if gender.upper() not in ['M', 'F', 'OTHER', 'MALE', 'FEMALE']:
             return "Gender must be M, F, or Other."
         return None
+
+    @staticmethod
+    def validate_blood_group(blood_group):
+        valid_groups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+        if not blood_group or blood_group.strip().upper() not in valid_groups:
+            return "enter a vaild blood group"
+        return None
