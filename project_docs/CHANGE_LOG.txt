@@ -82,3 +82,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Patient Update Bug                      | Entering empty fields during update wiped         | 1. Updated ReceptionistService.update_patient_details.
            |                                                   | existing data.                                    | 2. Added checks to only update if input is non-empty.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Doctor Availability Check Bug           | Checking invalid doctor ID returned "no           | 1. Updated ReceptionistService.check_doctor_availability.
+           |                                                   | appointments" instead of "doctor not found".      | 2. Added check against StaffDAO to verify doctor exists.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

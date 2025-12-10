@@ -1,6 +1,7 @@
 from dao.impl.patient_dao_impl import PatientDAOImpl
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
 from dao.impl.bill_dao_impl import BillDAOImpl
+from dao.impl.staff_dao_impl import StaffDAOImpl
 from models.patient import Patient
 from models.appointment import Appointment
 from models.bill import Bill
@@ -12,6 +13,7 @@ class ReceptionistService:
         self.patient_dao = PatientDAOImpl()
         self.appointment_dao = AppointmentDAOImpl()
         self.bill_dao = BillDAOImpl()
+        self.staff_dao = StaffDAOImpl()
 
     def register_patient(self, name, age, gender, contact, blood_group, address):
         err = Validators.validate_name(name)
@@ -100,6 +102,13 @@ class ReceptionistService:
         return self.bill_dao.get_bill_by_id(bill_id)
 
     def check_doctor_availability(self, doctor_id):
+        # Validate doctor existence
+        doctor = self.staff_dao.get_staff_by_id(doctor_id)
+        if not doctor:
+            raise ValueError(f"Doctor with ID {doctor_id} not found.")
+        if doctor.get_role() != 'Doctor':
+             raise ValueError(f"Staff with ID {doctor_id} is not a Doctor.")
+             
         return self.appointment_dao.get_appointments_by_doctor(doctor_id)
 
     def check_in_patient(self, appointment_id):
