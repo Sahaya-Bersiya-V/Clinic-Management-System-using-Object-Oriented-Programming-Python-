@@ -97,3 +97,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Pharmacist Bill Date Bug                | User could enter past/future dates manually.      | 1. Updated PharmacistDashboard: Removed date input.
            |                                                   | Request was to strictly set it to 'Today'.        | 2. Updated PharmacistService: Forced date to date.today().
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Pharmacist Bill FK Error                | Raw SQL error shown when missing patient/ppt ID.  | 1. Updated PharmacistService.generate_bill.
+           |                                                   | Similar to Receptionist fix.                      | 2. Added pre-validation for Patient and Appointment IDs.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
