@@ -72,3 +72,4 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   |                                                   | 2. Offers immediate 'Book Appointment' step.
 2025-12-09 | Enhanced Patient Validation                 | Invalid input (e.g. Contact=9) was accepted.      | 1. Updated Validators (added Age, Gender rules).
            |                                                   |                                                   | 2. Updated ReceptionistService to enforce them.
+2025-12-09 | Enhanced Date Validation                    | Past dates were allowed for new medications.      | 1. Updated PharmacistService.add_medicine w/ Future validator.

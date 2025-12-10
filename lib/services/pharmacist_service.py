@@ -18,6 +18,8 @@ class PharmacistService:
         if float(price) <= 0: raise ValueError("Price must be positive")
         if int(quantity) < 0: raise ValueError("Quantity cannot be negative")
         if not expiry_date: raise ValueError("Expiry Date is required")
+        err = Validators.validate_future_date(expiry_date)
+        if err: raise ValueError(f"Expiry Date Error: {err}")
         if not batch_no: raise ValueError("Batch No is required")
 
         medicine = Medicine(name=name, price=price, quantity=quantity, expiry_date=expiry_date, batch_no=batch_no)
