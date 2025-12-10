@@ -91,3 +91,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Doctor Role Case-Sensitivity Bug        | Some doctors had role 'doctor' (lower) vs 'Doctor'| 1. Updated ReceptionistService.check_doctor_availability.
            |                                                   | causing "Staff is not a Doctor" error.            | 2. Made role check case-insensitive.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Medicine Update Logic                   | Updating medicine with empty fields wiped existing | 1. Updated PharmacistService.update_medicine.
+           |                                                   | data.                                             | 2. Added logic to retain existing data if input is empty.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

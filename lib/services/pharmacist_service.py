@@ -26,8 +26,23 @@ class PharmacistService:
         return self.medicine_dao.create_medicine(medicine)
 
     def update_medicine(self, medicine_id, name, price, quantity, expiry_date, batch_no):
-         # Fetch existing medicine first to ensure it exists (omitted for brevity, trusting DAO update or ID)
-        medicine = Medicine(medicine_id=medicine_id, name=name, price=price, quantity=quantity, expiry_date=expiry_date, batch_no=batch_no)
+        medicine = self.medicine_dao.get_medicine_by_id(medicine_id)
+        if not medicine: raise ValueError("Medicine not found")
+
+        if name and name.strip(): medicine.set_name(name)
+        if price and str(price).strip():
+             if float(price) <= 0: raise ValueError("Price must be positive")
+             medicine.set_price(price)
+        if quantity and str(quantity).strip():
+             if int(quantity) < 0: raise ValueError("Quantity cannot be negative")
+             medicine.set_quantity(quantity)
+        if expiry_date and str(expiry_date).strip():
+             err = Validators.validate_future_date(expiry_date)
+             if err: raise ValueError(f"Expiry Date Error: {err}")
+             medicine.set_expiry_date(expiry_date)
+        if batch_no and str(batch_no).strip():
+             medicine.set_batch_no(batch_no)
+
         self.medicine_dao.update_medicine(medicine)
 
     def view_medicines(self):
