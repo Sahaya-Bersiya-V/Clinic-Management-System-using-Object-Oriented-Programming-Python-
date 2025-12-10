@@ -89,6 +89,10 @@ class PharmacistService:
             if not self.appointment_dao.get_appointment_by_id(appointment_id):
                 raise ValueError(f"Appointment with ID {appointment_id} not found.")
 
+        # Validate status
+        if status not in ['Paid', 'Unpaid']:
+            raise ValueError("Status must be 'Paid' or 'Unpaid'.")
+
         medicines = self.medicine_dao.get_all_medicines()
         target_med = None
         for med in medicines:
