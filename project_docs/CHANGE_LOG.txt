@@ -121,3 +121,6 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   | Garbage input accepted for Qty/Dosage.            | 2. Added pre-validation for Appt/Med IDs existence.
            |                                                   |                                                   | 3. Added validation for Quantity (positive int) & required text.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Lab Prescription Foreign Key Error      | FK constraint failed for invalid Appt/Pt ID.      | 1. Updated DoctorService.prescribe_lab_test.
+           |                                                   |                                                   | 2. Added pre-validation for Appointment and Patient IDs.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
