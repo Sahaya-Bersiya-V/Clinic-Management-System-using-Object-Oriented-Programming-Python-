@@ -100,3 +100,7 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Pharmacist Bill FK Error                | Raw SQL error shown when missing patient/ppt ID.  | 1. Updated PharmacistService.generate_bill.
            |                                                   | Similar to Receptionist fix.                      | 2. Added pre-validation for Patient and Appointment IDs.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Lab Reports Data Entry Issue            | Data was not being saved to 'lab_reports' table   | 1. Updated LabReportDAOImpl.create_report.
+           |                                                   | (only lab_requests). User expected both.          | 2. Updated LabReportDAOImpl.update_test_result.
+           |                                                   |                                                   | 3. Added INSERT logic to populate lab_reports.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
