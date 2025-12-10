@@ -75,7 +75,23 @@ class DoctorService:
         if err: raise ValueError(err)
         err = Validators.validate_id(medicine_id)
         if err: raise ValueError(err)
+
+        # Validate existence
+        if not self.appointment_dao.get_appointment_by_id(appointment_id):
+             raise ValueError(f"Appointment with ID {appointment_id} not found.")
         
+        if not self.medicine_dao.get_medicine_by_id(medicine_id):
+             raise ValueError(f"Medicine with ID {medicine_id} not found.")
+
+        # Validate Quantity
+        if not str(quantity).isdigit() or int(quantity) <= 0:
+             raise ValueError("Quantity must be a positive number.")
+        
+        # We could validate dosage/duration to be non-empty, but loose strings are allowed.
+        # Ideally:
+        if not dosage or not dosage.strip(): raise ValueError("Dosage required.")
+        if not duration or not duration.strip(): raise ValueError("Duration required.")
+
         p = Prescription(appointment_id=appointment_id, medicine_id=medicine_id, dosage=dosage, duration=duration, quantity=quantity)
         self.prescription_dao.create_prescription(p)
 
