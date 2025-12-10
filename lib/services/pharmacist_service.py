@@ -77,7 +77,7 @@ class PharmacistService:
         appointments = self.appointment_dao.get_appointments_by_patient(patient_id)
         return len(appointments) > 1
 
-    def generate_bill(self, medicine_id, quantity, patient_id, appointment_id, discount, status, date):
+    def generate_bill(self, medicine_id, quantity, patient_id, appointment_id, discount, status):
         medicines = self.medicine_dao.get_all_medicines()
         target_med = None
         for med in medicines:
@@ -112,6 +112,7 @@ class PharmacistService:
             discount=final_discount,
             final_amount=final_amount,
             status=status or 'Unpaid',
-            date=date
+            status=status or 'Unpaid',
+            date=str(datetime.date.today())
         )
         return self.bill_dao.create_bill(bill)
