@@ -16,7 +16,8 @@ class PharmacistDashboard:
             print("6. Check Low Stock")
             print("7. Check Expiry Tracking")
             print("8. View Prescriptions")
-            print("9. Logout")
+            print("9. View My Profile")
+            print("10. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -37,6 +38,8 @@ class PharmacistDashboard:
             elif choice == '8':
                 self.view_prescriptions_ui()
             elif choice == '9':
+                self.view_profile()
+            elif choice == '10':
                 break
             else:
                 print("Invalid choice.")
@@ -153,5 +156,26 @@ class PharmacistDashboard:
             print(f"Total Amount: {bill.get_total_amount()}")
             print(f"Discount: {bill.get_discount()}")
             print(f"Final Amount: {bill.get_final_amount()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def view_profile(self):
+        """
+        Purpose: Displays the profile details of the currently logged-in Pharmacist.
+        Context: Called from self.display menu option 9.
+        Calls: PharmacistService.get_current_staff_profile
+        """
+        print("\n--- My Profile ---")
+        try:
+            profile = self.service.get_current_staff_profile(self.user.get_user_id())
+            if profile:
+                print(f"Name: {profile.get_name()}")
+                print(f"Role: {profile.get_role()}")
+                print(f"Contact: {profile.get_contact()}")
+                if profile.get_specialization():
+                    print(f"Specialization: {profile.get_specialization()}")
+                print(f"Shift: {profile.get_shift_start()} - {profile.get_shift_end()}")
+            else:
+                print("Profile details not found.")
         except Exception as e:
             print(f"Error: {e}")

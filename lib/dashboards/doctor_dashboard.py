@@ -23,7 +23,8 @@ class DoctorDashboard:
             print("8. Recommend Follow-Up Appointment")
             print("9. Generate Medical Certificate")
             print("10. Mark Consultation as Completed")
-            print("11. Logout")
+            print("11. View My Profile")
+            print("12. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -48,6 +49,8 @@ class DoctorDashboard:
             elif choice == '10':
                 self.complete_consultation()
             elif choice == '11':
+                self.view_profile()
+            elif choice == '12':
                 break
             else:
                 print("Invalid choice.")
@@ -242,3 +245,23 @@ class DoctorDashboard:
         Calls: self.record_consultation
         """
         self.record_consultation()
+
+    def view_profile(self):
+        """
+        Purpose: Displays the profile details of the currently logged-in Doctor.
+        Context: Called from self.display menu option 11.
+        Calls: DoctorService.get_current_staff_profile
+        """
+        print("\n--- My Profile ---")
+        try:
+            profile = self.service.get_current_staff_profile(self.user.get_user_id())
+            if profile:
+                print(f"Name: {profile.get_name()}")
+                print(f"Role: {profile.get_role()}")
+                print(f"Contact: {profile.get_contact()}")
+                print(f"Specialization: {profile.get_specialization()}")
+                print(f"Shift: {profile.get_shift_start()} - {profile.get_shift_end()}")
+            else:
+                print("Profile details not found.")
+        except Exception as e:
+            print(f"Error: {e}")

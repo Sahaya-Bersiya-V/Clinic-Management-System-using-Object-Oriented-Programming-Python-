@@ -124,3 +124,7 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Lab Prescription Foreign Key Error      | FK constraint failed for invalid Appt/Pt ID.      | 1. Updated DoctorService.prescribe_lab_test.
            |                                                   |                                                   | 2. Added pre-validation for Appointment and Patient IDs.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added 'View My Profile' Feature               | User requested "view details" for all roles.      | 1. Updated StaffDAO: Added get_staff_by_user_id.
+           |                                                   |                                                   | 2. Updated All Services: Exposed profile fetch method.
+           |                                                   |                                                   | 3. Updated All Dashboards: Added 'View My Profile' menu.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

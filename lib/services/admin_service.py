@@ -89,3 +89,6 @@ class AdminService:
         """
         return self.staff_dao.get_staff_by_id(staff_id)
 
+    def get_current_staff_profile(self, user_id):
+        return self.staff_dao.get_staff_by_user_id(user_id)
+

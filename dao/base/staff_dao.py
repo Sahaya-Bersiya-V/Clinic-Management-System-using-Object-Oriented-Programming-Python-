@@ -30,3 +30,7 @@ class StaffDAO(ABC):
     def deactivate_staff(self, staff_id):
         pass
 
+    @abstractmethod
+    def get_staff_by_user_id(self, user_id):
+        pass
+

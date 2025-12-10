@@ -18,7 +18,8 @@ class AdminDashboard:
             print("1. Add Staff")
             print("2. View Staff")
             print("3. Edit/Remove Staff")
-            print("4. Logout")
+            print("4. View My Profile")
+            print("5. Logout")
             print("*"*25)
             
             choice = input("Enter choice: ").strip()
@@ -30,6 +31,8 @@ class AdminDashboard:
             elif choice == '3':
                 self.update_staff_menu()
             elif choice == '4':
+                 self.view_profile()
+            elif choice == '5':
                 print("Logging out...")
                 break
             else:
@@ -219,5 +222,28 @@ class AdminDashboard:
             else:
                 print("Invalid action.")
 
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def view_profile(self):
+        """
+        Purpose: Displays the profile details of the currently logged-in Admin.
+        Context: Called from self.display menu option 4.
+        Calls: AdminService.get_current_staff_profile or just User info
+        """
+        print("\n--- My Profile ---")
+        try:
+             # Admins might not be in the Staff table if they are just raw Users (e.g. 'admin'/'admin123').
+             # We check Staff table first.
+            profile = self.service.get_current_staff_profile(self.user.get_user_id())
+            if profile:
+                print(f"Name: {profile.get_name()}")
+                print(f"Role: {profile.get_role()}")
+                print(f"Contact: {profile.get_contact()}")
+            else:
+                 # Fallback for pure Admin users
+                print(f"Username: {self.user.get_username()}")
+                print(f"Role: {self.user.get_role()}")
+                print("Note: This is a system administrator account without a linked Staff profile.")
         except Exception as e:
             print(f"Error: {e}")

@@ -2,6 +2,7 @@ from dao.impl.medicine_dao_impl import MedicineDAOImpl
 from dao.impl.bill_dao_impl import BillDAOImpl
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
 from dao.impl.patient_dao_impl import PatientDAOImpl
+from dao.impl.staff_dao_impl import StaffDAOImpl
 from models.medicine import Medicine
 from models.bill import Bill
 from validation.validators import Validators
@@ -13,6 +14,7 @@ class PharmacistService:
         self.bill_dao = BillDAOImpl()
         self.appointment_dao = AppointmentDAOImpl()
         self.patient_dao = PatientDAOImpl()
+        self.staff_dao = StaffDAOImpl()
 
     def add_medicine(self, name, price, quantity, expiry_date, batch_no):
         err = Validators.validate_non_empty(name, "Medicine Name")
@@ -130,3 +132,6 @@ class PharmacistService:
             date=str(datetime.date.today())
         )
         return self.bill_dao.create_bill(bill)
+
+    def get_current_staff_profile(self, user_id):
+        return self.staff_dao.get_staff_by_user_id(user_id)
