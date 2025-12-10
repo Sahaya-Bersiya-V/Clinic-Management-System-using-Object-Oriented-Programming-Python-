@@ -107,3 +107,13 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Pharmacist Bill Status Validation       | System accepted random strings as status.         | 1. Updated PharmacistService.generate_bill.
            |                                                   | Expected only "Paid" or "Unpaid".                 | 2. Added validation check for status inputs.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Created Project Workflow Documentation        | User requested a high-level overview of all       | 1. Created project_docs/PROJECT_WORKFLOW.md.
+           |                                                   | module workflows.                                 | 2. Documented end-to-end flows for all roles.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Follow-up Status Length Bug             | DB error: "Follow-Up Recommended" > status(20)    | 1. Updated DoctorService.recommend_follow_up.
+           |                                                   | limit.                                            | 2. Changed status to "Follow-Up".
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Medical Certificate Input/Fetch Issues  | Accepted invalid inputs (alphabets) and didn't    | 1. Updated DoctorService via PatientDAO.
+           |                                                   | verify patient or fetch details.                  | 2. Added validations for Patient ID & Days.
+           |                                                   |                                                   | 3. Enhanced certificate text with details.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
