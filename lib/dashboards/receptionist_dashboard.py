@@ -19,8 +19,7 @@ class ReceptionistDashboard:
             print("9. Check Doctor Availability")
             print("10. Patient Check-in")
             print("11. View Booked Appointments")
-            print("12. View My Profile")
-            print("13. Logout")
+            print("12. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -47,8 +46,6 @@ class ReceptionistDashboard:
             elif choice == '11':
                 self.view_appointments()
             elif choice == '12':
-                self.view_profile()
-            elif choice == '13':
                 break
             else:
                 print("Invalid choice.")
@@ -196,26 +193,5 @@ class ReceptionistDashboard:
             else:
                 for a in appointments:
                     print(f"ID: {a.get_appointment_id()}, Patient ID: {a.get_patient_id()}, Doctor ID: {a.get_doctor_id()}, Date: {a.get_date()}, Status: {a.get_status()}")
-        except Exception as e:
-            print(f"Error: {e}")
-
-    def view_profile(self):
-        """
-        Purpose: Displays the profile details of the currently logged-in Receptionist.
-        Context: Called from self.display menu option 12.
-        Calls: ReceptionistService.get_current_staff_profile
-        """
-        print("\n--- My Profile ---")
-        try:
-            profile = self.service.get_current_staff_profile(self.user.get_user_id())
-            if profile:
-                print(f"Name: {profile.get_name()}")
-                print(f"Role: {profile.get_role()}")
-                print(f"Contact: {profile.get_contact()}")
-                if profile.get_specialization():
-                    print(f"Specialization: {profile.get_specialization()}")
-                print(f"Shift: {profile.get_shift_start()} - {profile.get_shift_end()}")
-            else:
-                print("Profile details not found.")
         except Exception as e:
             print(f"Error: {e}")

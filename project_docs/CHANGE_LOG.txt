@@ -128,3 +128,5 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   |                                                   | 2. Updated All Services: Exposed profile fetch method.
            |                                                   |                                                   | 3. Updated All Dashboards: Added 'View My Profile' menu.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Removed 'View My Profile' Feature             | User requested removal from all roles.            | Reverted changes in all Dashboards.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

@@ -13,8 +13,7 @@ class LabTechDashboard:
             print("3. Manage Lab Tests (Catalog)")
             print("4. View Pending Requests & Update Status")
             print("5. Re-upload/Correct Lab Report")
-            print("6. View My Profile")
-            print("7. Logout")
+            print("6. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -29,8 +28,6 @@ class LabTechDashboard:
             elif choice == '5':
                 self.correct_report_ui()
             elif choice == '6':
-                self.view_profile()
-            elif choice == '7':
                 break
             else:
                 print("Invalid choice.")
@@ -122,24 +119,3 @@ class LabTechDashboard:
             print("Report updated and notified (status set to Completed).")
         except Exception as e:
              print(f"Error: {e}")
-
-    def view_profile(self):
-        """
-        Purpose: Displays the profile details of the currently logged-in Lab Tech.
-        Context: Called from self.display menu option 6.
-        Calls: LabTechService.get_current_staff_profile
-        """
-        print("\n--- My Profile ---")
-        try:
-            profile = self.service.get_current_staff_profile(self.user.get_user_id())
-            if profile:
-                print(f"Name: {profile.get_name()}")
-                print(f"Role: {profile.get_role()}")
-                print(f"Contact: {profile.get_contact()}")
-                if profile.get_specialization():
-                    print(f"Specialization: {profile.get_specialization()}")
-                print(f"Shift: {profile.get_shift_start()} - {profile.get_shift_end()}")
-            else:
-                print("Profile details not found.")
-        except Exception as e:
-            print(f"Error: {e}")
