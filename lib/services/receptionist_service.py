@@ -55,6 +55,13 @@ class ReceptionistService:
         return self.patient_dao.get_patient_by_id(patient_id)
 
     def generate_bill(self, patient_id, appointment_id, total_amount, discount):
+        # Validate patient and appointment
+        if not self.patient_dao.get_patient_by_id(patient_id):
+            raise ValueError(f"Patient with ID {patient_id} not found.")
+        
+        if not self.appointment_dao.get_appointment_by_id(appointment_id):
+            raise ValueError(f"Appointment with ID {appointment_id} not found.")
+
         try:
             total_amount = float(total_amount)
             discount = float(discount)

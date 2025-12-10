@@ -85,3 +85,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Doctor Availability Check Bug           | Checking invalid doctor ID returned "no           | 1. Updated ReceptionistService.check_doctor_availability.
            |                                                   | appointments" instead of "doctor not found".      | 2. Added check against StaffDAO to verify doctor exists.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Bill Generation Foreign Key Error       | Raw SQL error shown when entering invalid         | 1. Updated ReceptionistService.generate_bill.
+           |                                                   | patient/appointment IDs.                          | 2. Added pre-validation for Patient and Appointment IDs.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
