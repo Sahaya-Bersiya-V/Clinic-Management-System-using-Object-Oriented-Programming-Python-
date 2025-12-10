@@ -75,7 +75,23 @@ class DoctorService:
         if err: raise ValueError(err)
         err = Validators.validate_id(medicine_id)
         if err: raise ValueError(err)
+
+        # Validate existence
+        if not self.appointment_dao.get_appointment_by_id(appointment_id):
+             raise ValueError(f"Appointment with ID {appointment_id} not found.")
         
+        if not self.medicine_dao.get_medicine_by_id(medicine_id):
+             raise ValueError(f"Medicine with ID {medicine_id} not found.")
+
+        # Validate Quantity
+        if not str(quantity).isdigit() or int(quantity) <= 0:
+             raise ValueError("Quantity must be a positive number.")
+        
+        # We could validate dosage/duration to be non-empty, but loose strings are allowed.
+        # Ideally:
+        if not dosage or not dosage.strip(): raise ValueError("Dosage required.")
+        if not duration or not duration.strip(): raise ValueError("Duration required.")
+
         p = Prescription(appointment_id=appointment_id, medicine_id=medicine_id, dosage=dosage, duration=duration, quantity=quantity)
         self.prescription_dao.create_prescription(p)
 
@@ -115,6 +131,17 @@ class DoctorService:
         Context: Called by DoctorDashboard.prescribe_lab_test.
         Calls: LabRequestDAOImpl.create_request
         """
+        # Validate IDs check
+        if not self.appointment_dao.get_appointment_by_id(appointment_id):
+             raise ValueError(f"Appointment with ID {appointment_id} not found.")
+        
+        if not self.patient_dao.get_patient_by_id(patient_id):
+             raise ValueError(f"Patient with ID {patient_id} not found.")
+             
+        # Ideally check test_id too if we had a method for it in LabReportDAO.
+        # But user didn't report issue with test_id yet, and we might not have a direct 'get_test_by_id'. 
+        # We can implement it if needed, but for now focusing on the reported crash.
+        
         request = LabRequest(appointment_id=appointment_id, patient_id=patient_id, test_id=test_id, status='Pending')
         return self.lab_request_dao.create_request(request)
 

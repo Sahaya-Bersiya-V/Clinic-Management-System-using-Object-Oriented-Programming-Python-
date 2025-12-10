@@ -117,3 +117,10 @@ Date       | Changes Made                                      | Why We Made It 
            |                                                   | verify patient or fetch details.                  | 2. Added validations for Patient ID & Days.
            |                                                   |                                                   | 3. Enhanced certificate text with details.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Prescription Foreign Key & Input Error  | FK constraint failed for invalid Appt ID.         | 1. Updated DoctorService.add_prescription_item.
+           |                                                   | Garbage input accepted for Qty/Dosage.            | 2. Added pre-validation for Appt/Med IDs existence.
+           |                                                   |                                                   | 3. Added validation for Quantity (positive int) & required text.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Lab Prescription Foreign Key Error      | FK constraint failed for invalid Appt/Pt ID.      | 1. Updated DoctorService.prescribe_lab_test.
+           |                                                   |                                                   | 2. Added pre-validation for Appointment and Patient IDs.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
