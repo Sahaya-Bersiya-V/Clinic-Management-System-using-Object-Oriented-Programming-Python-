@@ -5,6 +5,24 @@ class DoctorDashboard:
         self.user = user
         self.service = DoctorService()
 
+    def _prompt_appointment_id(self):
+        while True:
+            aid = input("Appointment ID (Enter 'L' to list yours): ").strip()
+            if aid.upper() == 'L':
+                self.view_appointments()
+            elif aid:
+                return aid
+
+    def _prompt_patient_id(self):
+        while True:
+            pid = input("Patient ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if pid.upper() == 'S':
+                self.search_patient_ui()
+            elif pid.upper() == 'L':
+                self.view_patient_list()
+            elif pid:
+                return pid 
+
     def display(self):
         """
         Purpose: Displays the main menu for the Doctor's Dashboard and handles user input routing.
@@ -23,7 +41,8 @@ class DoctorDashboard:
             print("8. Recommend Follow-Up Appointment")
             print("9. Generate Medical Certificate")
             print("10. Mark Consultation as Completed")
-            print("11. Logout")
+            print("11. View Patient List (ID Lookup)")
+            print("12. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -48,6 +67,8 @@ class DoctorDashboard:
             elif choice == '10':
                 self.complete_consultation()
             elif choice == '11':
+                self.view_patient_list()
+            elif choice == '12':
                 break
             else:
                 print("Invalid choice.")
@@ -80,7 +101,7 @@ class DoctorDashboard:
         Calls: DoctorService.get_appointment_details, DoctorService.record_consultation
         """
         print("\n--- Record/Update Consultation Notes ---")
-        appt_id = input("Appointment ID: ").strip()
+        appt_id = self._prompt_appointment_id()
         
         try:
             appt = self.service.get_appointment_details(appt_id)
@@ -114,7 +135,7 @@ class DoctorDashboard:
         Calls: DoctorService.get_all_medicines, DoctorService.add_prescription_item
         """
         print("\n--- Prescribe Medication ---")
-        appt_id = input("Appointment ID: ").strip()
+        appt_id = self._prompt_appointment_id()
         
         # Show Medicines
         try:
@@ -157,8 +178,8 @@ class DoctorDashboard:
             print("Available Tests:")
             for t in tests:
                 print(f"ID: {t['test_id']}, Name: {t['test_name']}, Cost: {t['cost']}")
-            appt_id = input("Appointment ID: ").strip()
-            pid = input("Patient ID: ").strip()
+            appt_id = self._prompt_appointment_id()
+            pid = self._prompt_patient_id()
             tid = input("Test ID (Integer): ").strip()
             self.service.prescribe_lab_test(appt_id, pid, tid)
             print("Lab Test Prescribed.")
@@ -171,7 +192,7 @@ class DoctorDashboard:
         Calls: DoctorService.view_medical_history
         """
         print("\n--- View Medical History ---")
-        pid = input("Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         try:
             history = self.service.view_medical_history(pid)
             for h in history:
@@ -198,7 +219,7 @@ class DoctorDashboard:
         Calls: DoctorService.recommend_follow_up
         """
         print("\n--- Recommend Follow-Up ---")
-        pid = input("Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         did = input("Doctor ID: ").strip()
         date = input("Date (YYYY-MM-DD): ").strip()
         try:
@@ -213,7 +234,7 @@ class DoctorDashboard:
         Calls: DoctorService.generate_medical_certificate
         """
         print("\n--- Generate Medical Certificate ---")
-        pid = input("Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         diag = input("Diagnosis: ").strip()
         days = input("Days of Rest: ").strip()
         try:
@@ -228,7 +249,7 @@ class DoctorDashboard:
         Calls: DoctorService.mark_consultation_completed
         """
         print("\n--- Complete Consultation ---")
-        aid = input("Appointment ID: ").strip()
+        aid = self._prompt_appointment_id()
         try:
             self.service.mark_consultation_completed(aid)
             print("Consultation Marked as Completed.")
@@ -242,3 +263,27 @@ class DoctorDashboard:
         Calls: self.record_consultation
         """
         self.record_consultation()
+
+    def view_patient_list(self):
+        print("\n--- Patient List ---")
+        try:
+            patients = self.service.get_all_patients()
+            if not patients:
+                print("No patients found.")
+            else:
+                 for p in patients:
+                    print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def search_patient_ui(self):
+        print("\n--- Search Patient ---")
+        try:
+            query = input("Enter Name or Contact: ")
+            patients = self.service.search_patients(query)
+            if not patients:
+                 print("No patients found.")
+            for p in patients:
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")

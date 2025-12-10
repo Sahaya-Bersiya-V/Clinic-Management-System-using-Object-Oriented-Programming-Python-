@@ -4,6 +4,7 @@ from dao.impl.lab_report_dao_impl import LabReportDAOImpl
 from dao.impl.prescription_dao_impl import PrescriptionDAOImpl
 from dao.impl.medicine_dao_impl import MedicineDAOImpl
 from dao.impl.patient_dao_impl import PatientDAOImpl
+from dao.impl.staff_dao_impl import StaffDAOImpl
 from models.appointment import Appointment
 from models.lab_request import LabRequest
 from models.prescription import Prescription
@@ -17,6 +18,7 @@ class DoctorService:
         self.prescription_dao = PrescriptionDAOImpl()
         self.medicine_dao = MedicineDAOImpl()
         self.patient_dao = PatientDAOImpl()
+        self.staff_dao = StaffDAOImpl()
 
     def get_appointments(self, doctor_id):
         """
@@ -243,3 +245,16 @@ class DoctorService:
         Calls: AppointmentDAOImpl.get_appointment_by_id
         """
         return self.appointment_dao.get_appointment_by_id(appointment_id)
+    def get_current_staff_profile(self, user_id):
+        """
+        Purpose: Retrieves the staff profile linked to the logged-in user.
+        Context: Called by Dashboards to display user profile details.
+        Calls: StaffDAOImpl.get_staff_by_user_id
+        """
+        return self.staff_dao.get_staff_by_user_id(user_id)
+
+    def get_all_patients(self):
+        return self.patient_dao.get_all_patients()
+
+    def search_patients(self, query):
+        return self.patient_dao.search_patients(query)

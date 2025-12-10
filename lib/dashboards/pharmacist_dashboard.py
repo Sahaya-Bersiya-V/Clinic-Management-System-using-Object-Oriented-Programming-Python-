@@ -5,6 +5,26 @@ class PharmacistDashboard:
         self.user = user
         self.service = PharmacistService()
 
+    def _prompt_medicine_id(self):
+        while True:
+            mid = input("Medicine ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if mid.upper() == 'S':
+                self.search_medicines_ui()
+            elif mid.upper() == 'L':
+                self.view_medicines()
+            elif mid:
+                return mid
+
+    def _prompt_patient_id(self):
+        while True:
+            pid = input("Patient ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if pid.upper() == 'S':
+                self.search_patient_ui()
+            elif pid.upper() == 'L':
+                self.view_patient_list()
+            elif pid:
+                return pid
+
     def display(self):
         while True:
             print(f"\n--- Pharmacist Dashboard ({self.user.get_username()}) ---")
@@ -16,7 +36,8 @@ class PharmacistDashboard:
             print("6. Check Low Stock")
             print("7. Check Expiry Tracking")
             print("8. View Prescriptions")
-            print("9. Logout")
+            print("9. View Patient List (ID Lookup)")
+            print("10. Logout")
             
             choice = input("Enter choice: ").strip()
             
@@ -37,6 +58,8 @@ class PharmacistDashboard:
             elif choice == '8':
                 self.view_prescriptions_ui()
             elif choice == '9':
+                self.view_patient_list()
+            elif choice == '10':
                 break
             else:
                 print("Invalid choice.")
@@ -76,7 +99,7 @@ class PharmacistDashboard:
 
     def update_medicine_ui(self):
         print("\n--- Update Medicine ---")
-        med_id = input("Medicine ID to update: ").strip()
+        med_id = self._prompt_medicine_id()
         # ideally retrieve it first, but for simplicity ask for all details
         name = input("New Name: ").strip()
         price = input("New Price: ").strip()
@@ -115,7 +138,7 @@ class PharmacistDashboard:
             print(f"Error: {e}")
 
     def view_prescriptions_ui(self):
-        pid = input("Enter Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         try:
             prescriptions = self.service.view_prescriptions(pid)
             if not prescriptions:
@@ -128,7 +151,7 @@ class PharmacistDashboard:
 
     def generate_bill(self):
         print("\n--- Generate Bill ---")
-        patient_id = input("Patient ID: ").strip()
+        patient_id = self._prompt_patient_id()
         
         # Check for returning patient
         try:
@@ -140,7 +163,7 @@ class PharmacistDashboard:
             pass # ignore if patient id invalid for this check, service will catch later
 
         appointment_id = input("Appointment ID (Optional, press Enter to skip): ").strip()
-        med_id = input("Medicine ID: ").strip()
+        med_id = self._prompt_medicine_id()
         qty = input("Quantity: ").strip()
         discount = input("Discount (0 if none): ").strip()
         status = input("Status (Paid/Unpaid): ").strip()
@@ -153,5 +176,29 @@ class PharmacistDashboard:
             print(f"Total Amount: {bill.get_total_amount()}")
             print(f"Discount: {bill.get_discount()}")
             print(f"Final Amount: {bill.get_final_amount()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def view_patient_list(self):
+        print("\n--- Patient List ---")
+        try:
+            patients = self.service.get_all_patients()
+            if not patients:
+                print("No patients found.")
+            else:
+                 for p in patients:
+                    print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def search_patient_ui(self):
+        print("\n--- Search Patient ---")
+        try:
+            query = input("Enter Name or Contact: ")
+            patients = self.service.search_patients(query)
+            if not patients:
+                 print("No patients found.")
+            for p in patients:
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")

@@ -1,4 +1,6 @@
 from dao.impl.lab_report_dao_impl import LabReportDAOImpl
+from dao.impl.staff_dao_impl import StaffDAOImpl
+from dao.impl.patient_dao_impl import PatientDAOImpl
 from models.lab_report import LabReport
 from validation.validators import Validators
 import datetime
@@ -6,6 +8,8 @@ import datetime
 class LabTechService:
     def __init__(self):
         self.lab_report_dao = LabReportDAOImpl()
+        self.staff_dao = StaffDAOImpl()
+        self.patient_dao = PatientDAOImpl()
 
     def add_test_result(self, patient_id, test_name, result):
         err = Validators.validate_id(patient_id)
@@ -44,3 +48,12 @@ class LabTechService:
         err = Validators.validate_non_empty(result, "Result")
         if err: raise ValueError(err)
         self.lab_report_dao.update_test_result(request_id, result)
+
+    def get_current_staff_profile(self, user_id):
+        return self.staff_dao.get_staff_by_user_id(user_id)
+
+    def get_all_patients(self):
+        return self.patient_dao.get_all_patients()
+
+    def search_patients(self, query):
+        return self.patient_dao.search_patients(query)

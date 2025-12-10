@@ -124,3 +124,23 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Lab Prescription Foreign Key Error      | FK constraint failed for invalid Appt/Pt ID.      | 1. Updated DoctorService.prescribe_lab_test.
            |                                                   |                                                   | 2. Added pre-validation for Appointment and Patient IDs.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added 'View My Profile' Feature               | User requested "view details" for all roles.      | 1. Updated StaffDAO: Added get_staff_by_user_id.
+           |                                                   |                                                   | 2. Updated All Services: Exposed profile fetch method.
+           |                                                   |                                                   | 3. Updated All Dashboards: Added 'View My Profile' menu.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Removed 'View My Profile' Feature             | User requested removal from all roles.            | Reverted changes in all Dashboards.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Admin Staff Update Validation           | Name field accepted numbers.                      | 1. Updated AdminDashboard.update_staff_menu.
+           |                                                   |                                                   | 2. Added Validators.validate_name check.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added Helpers for ID Lookup in Dashboards     | User found it hard to remember IDs.               | 1. Receptionist: Added list/search for Patient/Doctor/Appt IDs.
+           |                                                   |                                                   | 2. Doctor: Added list appointment helper.
+           |                                                   |                                                   | 3. Pharmacist: Added list/search medicine helper.
+           |                                                   |                                                   | 4. Lab Tech: Added list request helper.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added 'View Patient List' to Dashboards       | User requested 'View ID and Details' option.      | 1. Updated Doctor, Pharmacist, LabTech Services & Dashboards.
+           |                                                   |                                                   | 2. Added explicit menu option to list all patients.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added 'Search Patient' to All Dashboards      | User reported search not working.                 | 1. Added search_patients to Doc/Pharm/Lab Services.
+           |                                                   |                                                   | 2. Updated Prompts to allow 'S' for Search in Dashboards.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

@@ -120,3 +120,25 @@ class StaffDAOImpl(StaffDAO):
         except Exception as e:
             raise e
 
+    def get_staff_by_user_id(self, user_id):
+        connection = self.db_connection.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM staff WHERE user_id = %s"
+                cursor.execute(sql, (user_id,))
+                result = cursor.fetchone()
+                if result:
+                    return Staff(
+                        staff_id=result['staff_id'],
+                        name=result['name'],
+                        role=result['role'],
+                        contact=result['contact'],
+                        user_id=result['user_id'],
+                        specialization=result.get('specialization'),
+                        shift_start=result.get('shift_start'),
+                        shift_end=result.get('shift_end')
+                    )
+                return None
+        except Exception as e:
+            raise e
+
