@@ -126,3 +126,6 @@ class ReceptionistService:
 
     def get_current_staff_profile(self, user_id):
         return self.staff_dao.get_staff_by_user_id(user_id)
+
+    def get_doctor_list(self):
+        return self.staff_dao.get_staff_by_role('doctor')

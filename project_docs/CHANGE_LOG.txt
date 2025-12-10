@@ -133,3 +133,8 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Admin Staff Update Validation           | Name field accepted numbers.                      | 1. Updated AdminDashboard.update_staff_menu.
            |                                                   |                                                   | 2. Added Validators.validate_name check.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added Helpers for ID Lookup in Dashboards     | User found it hard to remember IDs.               | 1. Receptionist: Added list/search for Patient/Doctor/Appt IDs.
+           |                                                   |                                                   | 2. Doctor: Added list appointment helper.
+           |                                                   |                                                   | 3. Pharmacist: Added list/search medicine helper.
+           |                                                   |                                                   | 4. Lab Tech: Added list request helper.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

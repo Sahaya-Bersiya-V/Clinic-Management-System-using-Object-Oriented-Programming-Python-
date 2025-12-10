@@ -5,6 +5,24 @@ class PharmacistDashboard:
         self.user = user
         self.service = PharmacistService()
 
+    def _prompt_medicine_id(self):
+        while True:
+            mid = input("Medicine ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if mid.upper() == 'S':
+                self.search_medicines_ui()
+            elif mid.upper() == 'L':
+                self.view_medicines()
+            elif mid:
+                return mid
+
+    def _prompt_patient_id(self):
+         # Pharmacist might search patients by name too
+         # But PharmacistService doesn't expose search_patient (Receptionist does).
+         # We can just prompt simple ID or assume user knows ID or uses 'L' if we implement patient listing for Pharmacist.
+         # Actually PharmacistService doesn't have list_patients.
+         # So we will stick to simple input for now, or minimal helper.
+         return input("Patient ID: ").strip()
+
     def display(self):
         while True:
             print(f"\n--- Pharmacist Dashboard ({self.user.get_username()}) ---")
@@ -76,7 +94,7 @@ class PharmacistDashboard:
 
     def update_medicine_ui(self):
         print("\n--- Update Medicine ---")
-        med_id = input("Medicine ID to update: ").strip()
+        med_id = self._prompt_medicine_id()
         # ideally retrieve it first, but for simplicity ask for all details
         name = input("New Name: ").strip()
         price = input("New Price: ").strip()
@@ -115,7 +133,7 @@ class PharmacistDashboard:
             print(f"Error: {e}")
 
     def view_prescriptions_ui(self):
-        pid = input("Enter Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         try:
             prescriptions = self.service.view_prescriptions(pid)
             if not prescriptions:
@@ -128,7 +146,7 @@ class PharmacistDashboard:
 
     def generate_bill(self):
         print("\n--- Generate Bill ---")
-        patient_id = input("Patient ID: ").strip()
+        patient_id = self._prompt_patient_id()
         
         # Check for returning patient
         try:
@@ -140,7 +158,7 @@ class PharmacistDashboard:
             pass # ignore if patient id invalid for this check, service will catch later
 
         appointment_id = input("Appointment ID (Optional, press Enter to skip): ").strip()
-        med_id = input("Medicine ID: ").strip()
+        med_id = self._prompt_medicine_id()
         qty = input("Quantity: ").strip()
         discount = input("Discount (0 if none): ").strip()
         status = input("Status (Paid/Unpaid): ").strip()

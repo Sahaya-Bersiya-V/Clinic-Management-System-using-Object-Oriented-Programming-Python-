@@ -5,6 +5,38 @@ class ReceptionistDashboard:
         self.user = user
         self.service = ReceptionistService()
 
+    def _prompt_patient_id(self):
+        while True:
+            pid = input("Patient ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if pid.upper() == 'S':
+                self.search_patient()
+            elif pid.upper() == 'L':
+                self.view_patients()
+            elif pid:
+                return pid
+
+    def _prompt_doctor_id(self):
+        while True:
+            did = input("Doctor ID (Enter 'L' to list all doctors): ").strip()
+            if did.upper() == 'L':
+                 try:
+                    doctors = self.service.get_doctor_list()
+                    print("\n--- Doctor List ---")
+                    for d in doctors:
+                         print(f"ID: {d.get_staff_id()}, Name: {d.get_name()}, Spec: {d.get_specialization()}")
+                 except Exception as e:
+                     print(f"Error fetching doctors: {e}")
+            elif did:
+                return did
+
+    def _prompt_appointment_id(self):
+        while True:
+            aid = input("Appointment ID (Enter 'L' to list all): ").strip()
+            if aid.upper() == 'L':
+                self.view_appointments()
+            elif aid:
+                return aid
+
     def display(self):
         while True:
             print(f"\n--- Receptionist Dashboard ({self.user.get_username()}) ---")
@@ -73,7 +105,7 @@ class ReceptionistDashboard:
     def book_appointment(self, patient_id=None):
         print("\n--- Book Appointment ---")
         if not patient_id:
-            patient_id = input("Patient ID: ").strip()
+            patient_id = self._prompt_patient_id()
         
         # Fetch and show patient details first
         try:
@@ -92,7 +124,7 @@ class ReceptionistDashboard:
             print(f"Error fetching patient: {e}")
             return
 
-        doctor_id = input("Doctor ID: ").strip()
+        doctor_id = self._prompt_doctor_id()
         date = input("Date (YYYY-MM-DD): ").strip()
         
         try:
@@ -113,8 +145,8 @@ class ReceptionistDashboard:
     def generate_bill(self):
         print("\n--- Generate Bill ---")
         try:
-            pid = input("Patient ID: ")
-            aid = input("Appointment ID: ")
+            pid = self._prompt_patient_id()
+            aid = self._prompt_appointment_id()
             total = input("Total Amount: ")
             discount = input("Discount: ")
             bill = self.service.generate_bill(pid, aid, total, discount)
@@ -124,7 +156,7 @@ class ReceptionistDashboard:
     def update_patient(self):
         print("\n--- Update Patient ---")
         try:
-            pid = input("Patient ID: ")
+            pid = self._prompt_patient_id()
             name = input("New Name: ")
             age = input("New Age: ")
             gender = input("New Gender: ")
@@ -138,7 +170,7 @@ class ReceptionistDashboard:
     def cancel_appointment(self):
         print("\n--- Cancel Appointment ---")
         try:
-            aid = input("Appointment ID: ")
+            aid = self._prompt_appointment_id()
             self.service.cancel_appointment(aid)
             print("Appointment Cancelled.")
         except Exception as e: print(f"Error: {e}")
@@ -166,7 +198,7 @@ class ReceptionistDashboard:
     def check_doctor_availability(self):
         print("\n--- Check Doctor Availability ---")
         try:
-            did = input("Doctor ID: ")
+            did = self._prompt_doctor_id()
             apps = self.service.check_doctor_availability(did)
             if not apps:
                 print("Doctor has no appointments.")
@@ -179,7 +211,7 @@ class ReceptionistDashboard:
     def check_in_patient(self):
         print("\n--- Check In Patient ---")
         try:
-            aid = input("Appointment ID: ")
+            aid = self._prompt_appointment_id()
             self.service.check_in_patient(aid)
             print("Patient Checked In.")
         except Exception as e: print(f"Error: {e}")

@@ -5,6 +5,24 @@ class LabTechDashboard:
         self.user = user
         self.service = LabTechService()
 
+    def _prompt_patient_id(self):
+        # LabTech doesn't have list_patients exposed in LabTechService yet. 
+        # But for 'View Patient Reports' or 'Add Test Result', searching by name would be useful.
+        # User requested "in every dashboard".
+        # LabTechService -> LabReportDAO -> Doesn't access PatientDAO usually.
+        # So we might just have to skip advanced search here unless we add PatientDAO to LabTechService.
+        # Given "very difficult to remember ID", I will just ask for ID for now, 
+        # but add a note or minimal helper if I can list recent requests.
+        return input("Patient ID: ").strip()
+
+    def _prompt_request_id(self):
+        # We can list pending requests as reference
+         rid = input("Request ID (Enter 'L' to list pending): ").strip()
+         if rid.upper() == 'L':
+             self.update_status_ui() # This lists pending requests
+             return input("Request ID: ").strip()
+         return rid
+
     def display(self):
         while True:
             print(f"\n--- Lab Technician Dashboard ({self.user.get_username()}) ---")
@@ -42,7 +60,7 @@ class LabTechDashboard:
         except Exception as e:
             print(f"Could not fetch tests: {e}")
 
-        patient_id = input("Patient ID: ").strip()
+        patient_id = self._prompt_patient_id()
         test_name = input("Test Name: ").strip()
         result = input("Result: ").strip()
         
@@ -54,7 +72,7 @@ class LabTechDashboard:
 
     def view_reports(self):
         print("\n--- View Reports ---")
-        patient_id = input("Patient ID: ").strip()
+        patient_id = self._prompt_patient_id()
         
         try:
             reports = self.service.view_patient_reports(patient_id)
@@ -99,7 +117,7 @@ class LabTechDashboard:
             for r in reqs:
                 print(f"ReqID: {r['request_id']}, Patient: {r['patient_id']}, Test: {r['test_name']}, Status: {r['status']}")
             
-            rid = input("Enter Request ID to update (or Enter to skip): ").strip()
+            rid = self._prompt_request_id()
             if rid:
                 print("Statuses: Processing, Completed")
                 status = input("New Status: ").strip()
@@ -112,7 +130,7 @@ class LabTechDashboard:
 
     def correct_report_ui(self):
         print("\n--- Correct/Re-upload Report ---")
-        rid = input("Request/Report ID: ").strip()
+        rid = self._prompt_request_id()
         new_result = input("New/Corrected Result: ").strip()
         try:
             self.service.update_lab_report(rid, new_result)

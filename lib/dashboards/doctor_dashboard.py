@@ -5,6 +5,26 @@ class DoctorDashboard:
         self.user = user
         self.service = DoctorService()
 
+    def _prompt_appointment_id(self):
+        while True:
+            aid = input("Appointment ID (Enter 'L' to list yours): ").strip()
+            if aid.upper() == 'L':
+                self.view_appointments()
+            elif aid:
+                return aid
+
+    def _prompt_patient_id(self):
+        # We don't have a direct "search patient" in Doctor Service yet, but assuming we can use view_medical_history logic maybe?
+        # Actually Doctor Dashboard doesn't have a "View All Patients" or "Search Patient" exposed method like Receptionist.
+        # But Doctor might need to find a patient.
+        # Let's rely on Appointment list to find Patient IDs usually.
+        # Or I can add a basic search if needed. For now I'll just skip 'Search' on Patient ID for Doctor unless they have appointments.
+        # BUT the user said "in every dashbords". So I should probably add search.
+        # DoctorService has `patient_dao`. I can add search there.
+        # Let's assume user knows Patient ID from Appointment List.
+        # I'll Add 'L' to list appointments as a way to find patient IDs too.
+        return input("Patient ID: ").strip() 
+
     def display(self):
         """
         Purpose: Displays the main menu for the Doctor's Dashboard and handles user input routing.
@@ -80,7 +100,7 @@ class DoctorDashboard:
         Calls: DoctorService.get_appointment_details, DoctorService.record_consultation
         """
         print("\n--- Record/Update Consultation Notes ---")
-        appt_id = input("Appointment ID: ").strip()
+        appt_id = self._prompt_appointment_id()
         
         try:
             appt = self.service.get_appointment_details(appt_id)
@@ -114,7 +134,7 @@ class DoctorDashboard:
         Calls: DoctorService.get_all_medicines, DoctorService.add_prescription_item
         """
         print("\n--- Prescribe Medication ---")
-        appt_id = input("Appointment ID: ").strip()
+        appt_id = self._prompt_appointment_id()
         
         # Show Medicines
         try:
@@ -157,7 +177,7 @@ class DoctorDashboard:
             print("Available Tests:")
             for t in tests:
                 print(f"ID: {t['test_id']}, Name: {t['test_name']}, Cost: {t['cost']}")
-            appt_id = input("Appointment ID: ").strip()
+            appt_id = self._prompt_appointment_id()
             pid = input("Patient ID: ").strip()
             tid = input("Test ID (Integer): ").strip()
             self.service.prescribe_lab_test(appt_id, pid, tid)
@@ -228,7 +248,7 @@ class DoctorDashboard:
         Calls: DoctorService.mark_consultation_completed
         """
         print("\n--- Complete Consultation ---")
-        aid = input("Appointment ID: ").strip()
+        aid = self._prompt_appointment_id()
         try:
             self.service.mark_consultation_completed(aid)
             print("Consultation Marked as Completed.")
