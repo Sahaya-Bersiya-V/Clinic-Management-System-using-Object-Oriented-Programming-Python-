@@ -1,6 +1,7 @@
 from dao.impl.patient_dao_impl import PatientDAOImpl
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
 from dao.impl.bill_dao_impl import BillDAOImpl
+from dao.impl.staff_dao_impl import StaffDAOImpl
 from models.patient import Patient
 from models.appointment import Appointment
 from models.bill import Bill
@@ -12,6 +13,7 @@ class ReceptionistService:
         self.patient_dao = PatientDAOImpl()
         self.appointment_dao = AppointmentDAOImpl()
         self.bill_dao = BillDAOImpl()
+        self.staff_dao = StaffDAOImpl()
 
     def register_patient(self, name, age, gender, contact, blood_group, address):
         err = Validators.validate_name(name)
@@ -53,6 +55,13 @@ class ReceptionistService:
         return self.patient_dao.get_patient_by_id(patient_id)
 
     def generate_bill(self, patient_id, appointment_id, total_amount, discount):
+        # Validate patient and appointment
+        if not self.patient_dao.get_patient_by_id(patient_id):
+            raise ValueError(f"Patient with ID {patient_id} not found.")
+        
+        if not self.appointment_dao.get_appointment_by_id(appointment_id):
+            raise ValueError(f"Appointment with ID {appointment_id} not found.")
+
         try:
             total_amount = float(total_amount)
             discount = float(discount)
@@ -100,6 +109,13 @@ class ReceptionistService:
         return self.bill_dao.get_bill_by_id(bill_id)
 
     def check_doctor_availability(self, doctor_id):
+        # Validate doctor existence
+        doctor = self.staff_dao.get_staff_by_id(doctor_id)
+        if not doctor:
+            raise ValueError(f"Doctor with ID {doctor_id} not found.")
+        if doctor.get_role() != 'Doctor':
+             raise ValueError(f"Staff with ID {doctor_id} is not a Doctor.")
+             
         return self.appointment_dao.get_appointments_by_doctor(doctor_id)
 
     def check_in_patient(self, appointment_id):
