@@ -144,10 +144,10 @@ class PharmacistDashboard:
         qty = input("Quantity: ").strip()
         discount = input("Discount (0 if none): ").strip()
         status = input("Status (Paid/Unpaid): ").strip()
-        date = input("Date (YYYY-MM-DD): ").strip()
+        # Date is auto-set to today
         
         try:
-            bill = self.service.generate_bill(med_id, qty, patient_id, appointment_id, discount, status, date)
+            bill = self.service.generate_bill(med_id, qty, patient_id, appointment_id, discount, status)
             print(f"Bill Generated Successfully.")
             print(f"Bill ID: {bill.get_bill_id()}")
             print(f"Total Amount: {bill.get_total_amount()}")

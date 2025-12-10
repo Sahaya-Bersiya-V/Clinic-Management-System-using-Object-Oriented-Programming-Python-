@@ -113,7 +113,7 @@ class ReceptionistService:
         doctor = self.staff_dao.get_staff_by_id(doctor_id)
         if not doctor:
             raise ValueError(f"Doctor with ID {doctor_id} not found.")
-        if doctor.get_role() != 'Doctor':
+        if doctor.get_role().strip().lower() != 'doctor':
              raise ValueError(f"Staff with ID {doctor_id} is not a Doctor.")
              
         return self.appointment_dao.get_appointments_by_doctor(doctor_id)

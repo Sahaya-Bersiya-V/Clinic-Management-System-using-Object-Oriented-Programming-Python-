@@ -19,6 +19,11 @@ class LabReportDAOImpl(LabReportDAO):
 
                 sql = "INSERT INTO lab_requests (patient_id, test_id, result, report_date, status) VALUES (%s, %s, %s, %s, 'Completed')"
                 cursor.execute(sql, (report.get_patient_id(), test_id, report.get_result(), report.get_date()))
+                
+                # Also insert into lab_reports table as requested
+                sql_report = "INSERT INTO lab_reports (patient_id, test_name, result, date) VALUES (%s, %s, %s, %s)"
+                cursor.execute(sql_report, (report.get_patient_id(), report.get_test_name(), report.get_result(), report.get_date()))
+                
                 report.set_report_id(cursor.lastrowid)
                 return report
         except Exception as e:
@@ -117,7 +122,23 @@ class LabReportDAOImpl(LabReportDAO):
                 # Also set date to today when correcting/uploading result? Yes.
                 import datetime
                 today = datetime.date.today()
+                
+                # Update request
                 sql = "UPDATE lab_requests SET result = %s, report_date = %s, status = 'Completed' WHERE request_id = %s"
                 cursor.execute(sql, (result, today, request_id))
+                
+                # Fetch details to insert into lab_reports
+                sql_get = """
+                    SELECT lr.patient_id, lt.test_name 
+                    FROM lab_requests lr
+                    JOIN lab_tests lt ON lr.test_id = lt.test_id
+                    WHERE lr.request_id = %s
+                """
+                cursor.execute(sql_get, (request_id,))
+                row = cursor.fetchone()
+                
+                if row:
+                     sql_report = "INSERT INTO lab_reports (patient_id, test_name, result, date) VALUES (%s, %s, %s, %s)"
+                     cursor.execute(sql_report, (row['patient_id'], row['test_name'], result, today))
         except Exception as e:
             raise e

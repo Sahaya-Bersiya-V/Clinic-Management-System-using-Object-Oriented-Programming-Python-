@@ -1,6 +1,7 @@
 from dao.impl.medicine_dao_impl import MedicineDAOImpl
 from dao.impl.bill_dao_impl import BillDAOImpl
 from dao.impl.appointment_dao_impl import AppointmentDAOImpl
+from dao.impl.patient_dao_impl import PatientDAOImpl
 from models.medicine import Medicine
 from models.bill import Bill
 from validation.validators import Validators
@@ -11,6 +12,7 @@ class PharmacistService:
         self.medicine_dao = MedicineDAOImpl()
         self.bill_dao = BillDAOImpl()
         self.appointment_dao = AppointmentDAOImpl()
+        self.patient_dao = PatientDAOImpl()
 
     def add_medicine(self, name, price, quantity, expiry_date, batch_no):
         err = Validators.validate_non_empty(name, "Medicine Name")
@@ -26,8 +28,23 @@ class PharmacistService:
         return self.medicine_dao.create_medicine(medicine)
 
     def update_medicine(self, medicine_id, name, price, quantity, expiry_date, batch_no):
-         # Fetch existing medicine first to ensure it exists (omitted for brevity, trusting DAO update or ID)
-        medicine = Medicine(medicine_id=medicine_id, name=name, price=price, quantity=quantity, expiry_date=expiry_date, batch_no=batch_no)
+        medicine = self.medicine_dao.get_medicine_by_id(medicine_id)
+        if not medicine: raise ValueError("Medicine not found")
+
+        if name and name.strip(): medicine.set_name(name)
+        if price and str(price).strip():
+             if float(price) <= 0: raise ValueError("Price must be positive")
+             medicine.set_price(price)
+        if quantity and str(quantity).strip():
+             if int(quantity) < 0: raise ValueError("Quantity cannot be negative")
+             medicine.set_quantity(quantity)
+        if expiry_date and str(expiry_date).strip():
+             err = Validators.validate_future_date(expiry_date)
+             if err: raise ValueError(f"Expiry Date Error: {err}")
+             medicine.set_expiry_date(expiry_date)
+        if batch_no and str(batch_no).strip():
+             medicine.set_batch_no(batch_no)
+
         self.medicine_dao.update_medicine(medicine)
 
     def view_medicines(self):
@@ -62,7 +79,16 @@ class PharmacistService:
         appointments = self.appointment_dao.get_appointments_by_patient(patient_id)
         return len(appointments) > 1
 
-    def generate_bill(self, medicine_id, quantity, patient_id, appointment_id, discount, status, date):
+    def generate_bill(self, medicine_id, quantity, patient_id, appointment_id, discount, status):
+        # Validate patient existence
+        if not self.patient_dao.get_patient_by_id(patient_id):
+            raise ValueError(f"Patient with ID {patient_id} not found.")
+        
+        # Validate appointment existence if provided
+        if appointment_id:
+            if not self.appointment_dao.get_appointment_by_id(appointment_id):
+                raise ValueError(f"Appointment with ID {appointment_id} not found.")
+
         medicines = self.medicine_dao.get_all_medicines()
         target_med = None
         for med in medicines:
@@ -97,6 +123,6 @@ class PharmacistService:
             discount=final_discount,
             final_amount=final_amount,
             status=status or 'Unpaid',
-            date=date
+            date=str(datetime.date.today())
         )
         return self.bill_dao.create_bill(bill)
