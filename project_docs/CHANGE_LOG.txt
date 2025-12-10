@@ -88,3 +88,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Fixed Bill Generation Foreign Key Error       | Raw SQL error shown when entering invalid         | 1. Updated ReceptionistService.generate_bill.
            |                                                   | patient/appointment IDs.                          | 2. Added pre-validation for Patient and Appointment IDs.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Fixed Doctor Role Case-Sensitivity Bug        | Some doctors had role 'doctor' (lower) vs 'Doctor'| 1. Updated ReceptionistService.check_doctor_availability.
+           |                                                   | causing "Staff is not a Doctor" error.            | 2. Made role check case-insensitive.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
