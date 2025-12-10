@@ -141,3 +141,6 @@ Date       | Changes Made                                      | Why We Made It 
 2025-12-10 | Added 'View Patient List' to Dashboards       | User requested 'View ID and Details' option.      | 1. Updated Doctor, Pharmacist, LabTech Services & Dashboards.
            |                                                   |                                                   | 2. Added explicit menu option to list all patients.
 -----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------
+2025-12-10 | Added 'Search Patient' to All Dashboards      | User reported search not working.                 | 1. Added search_patients to Doc/Pharm/Lab Services.
+           |                                                   |                                                   | 2. Updated Prompts to allow 'S' for Search in Dashboards.
+-----------|---------------------------------------------------|---------------------------------------------------|------------------------------------------------------------

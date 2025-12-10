@@ -16,12 +16,14 @@ class PharmacistDashboard:
                 return mid
 
     def _prompt_patient_id(self):
-         # Pharmacist might search patients by name too
-         # But PharmacistService doesn't expose search_patient (Receptionist does).
-         # We can just prompt simple ID or assume user knows ID or uses 'L' if we implement patient listing for Pharmacist.
-         # Actually PharmacistService doesn't have list_patients.
-         # So we will stick to simple input for now, or minimal helper.
-         return input("Patient ID: ").strip()
+        while True:
+            pid = input("Patient ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if pid.upper() == 'S':
+                self.search_patient_ui()
+            elif pid.upper() == 'L':
+                self.view_patient_list()
+            elif pid:
+                return pid
 
     def display(self):
         while True:
@@ -186,5 +188,17 @@ class PharmacistDashboard:
             else:
                  for p in patients:
                     print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def search_patient_ui(self):
+        print("\n--- Search Patient ---")
+        try:
+            query = input("Enter Name or Contact: ")
+            patients = self.service.search_patients(query)
+            if not patients:
+                 print("No patients found.")
+            for p in patients:
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")

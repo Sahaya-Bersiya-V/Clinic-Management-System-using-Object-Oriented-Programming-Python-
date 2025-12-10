@@ -138,3 +138,6 @@ class PharmacistService:
 
     def get_all_patients(self):
         return self.patient_dao.get_all_patients()
+
+    def search_patients(self, query):
+        return self.patient_dao.search_patients(query)

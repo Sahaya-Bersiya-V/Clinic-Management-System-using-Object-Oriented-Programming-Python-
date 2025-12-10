@@ -6,14 +6,14 @@ class LabTechDashboard:
         self.service = LabTechService()
 
     def _prompt_patient_id(self):
-        # LabTech doesn't have list_patients exposed in LabTechService yet. 
-        # But for 'View Patient Reports' or 'Add Test Result', searching by name would be useful.
-        # User requested "in every dashboard".
-        # LabTechService -> LabReportDAO -> Doesn't access PatientDAO usually.
-        # So we might just have to skip advanced search here unless we add PatientDAO to LabTechService.
-        # Given "very difficult to remember ID", I will just ask for ID for now, 
-        # but add a note or minimal helper if I can list recent requests.
-        return input("Patient ID: ").strip()
+        while True:
+            pid = input("Patient ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if pid.upper() == 'S':
+                self.search_patient_ui()
+            elif pid.upper() == 'L':
+                self.view_patient_list()
+            elif pid:
+                return pid
 
     def _prompt_request_id(self):
         # We can list pending requests as reference
@@ -150,5 +150,17 @@ class LabTechDashboard:
             else:
                  for p in patients:
                     print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def search_patient_ui(self):
+        print("\n--- Search Patient ---")
+        try:
+            query = input("Enter Name or Contact: ")
+            patients = self.service.search_patients(query)
+            if not patients:
+                 print("No patients found.")
+            for p in patients:
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")

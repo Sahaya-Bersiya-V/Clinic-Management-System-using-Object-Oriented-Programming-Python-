@@ -14,16 +14,14 @@ class DoctorDashboard:
                 return aid
 
     def _prompt_patient_id(self):
-        # We don't have a direct "search patient" in Doctor Service yet, but assuming we can use view_medical_history logic maybe?
-        # Actually Doctor Dashboard doesn't have a "View All Patients" or "Search Patient" exposed method like Receptionist.
-        # But Doctor might need to find a patient.
-        # Let's rely on Appointment list to find Patient IDs usually.
-        # Or I can add a basic search if needed. For now I'll just skip 'Search' on Patient ID for Doctor unless they have appointments.
-        # BUT the user said "in every dashbords". So I should probably add search.
-        # DoctorService has `patient_dao`. I can add search there.
-        # Let's assume user knows Patient ID from Appointment List.
-        # I'll Add 'L' to list appointments as a way to find patient IDs too.
-        return input("Patient ID: ").strip() 
+        while True:
+            pid = input("Patient ID (Enter 'S' to search, 'L' to list all): ").strip()
+            if pid.upper() == 'S':
+                self.search_patient_ui()
+            elif pid.upper() == 'L':
+                self.view_patient_list()
+            elif pid:
+                return pid 
 
     def display(self):
         """
@@ -181,7 +179,7 @@ class DoctorDashboard:
             for t in tests:
                 print(f"ID: {t['test_id']}, Name: {t['test_name']}, Cost: {t['cost']}")
             appt_id = self._prompt_appointment_id()
-            pid = input("Patient ID: ").strip()
+            pid = self._prompt_patient_id()
             tid = input("Test ID (Integer): ").strip()
             self.service.prescribe_lab_test(appt_id, pid, tid)
             print("Lab Test Prescribed.")
@@ -194,7 +192,7 @@ class DoctorDashboard:
         Calls: DoctorService.view_medical_history
         """
         print("\n--- View Medical History ---")
-        pid = input("Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         try:
             history = self.service.view_medical_history(pid)
             for h in history:
@@ -221,7 +219,7 @@ class DoctorDashboard:
         Calls: DoctorService.recommend_follow_up
         """
         print("\n--- Recommend Follow-Up ---")
-        pid = input("Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         did = input("Doctor ID: ").strip()
         date = input("Date (YYYY-MM-DD): ").strip()
         try:
@@ -236,7 +234,7 @@ class DoctorDashboard:
         Calls: DoctorService.generate_medical_certificate
         """
         print("\n--- Generate Medical Certificate ---")
-        pid = input("Patient ID: ").strip()
+        pid = self._prompt_patient_id()
         diag = input("Diagnosis: ").strip()
         days = input("Days of Rest: ").strip()
         try:
@@ -275,5 +273,17 @@ class DoctorDashboard:
             else:
                  for p in patients:
                     print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Age: {p.get_age()}, Contact: {p.get_contact()}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def search_patient_ui(self):
+        print("\n--- Search Patient ---")
+        try:
+            query = input("Enter Name or Contact: ")
+            patients = self.service.search_patients(query)
+            if not patients:
+                 print("No patients found.")
+            for p in patients:
+                print(f"ID: {p.get_patient_id()}, Name: {p.get_name()}, Contact: {p.get_contact()}")
         except Exception as e:
             print(f"Error: {e}")
