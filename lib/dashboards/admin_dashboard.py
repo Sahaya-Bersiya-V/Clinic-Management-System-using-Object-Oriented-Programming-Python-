@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from lib.services.admin_service import AdminService
+from validation.validators import Validators
 import sys
 
 class AdminDashboard:
@@ -195,7 +196,15 @@ class AdminDashboard:
                 print(f"Editing {staff.get_role()}: {staff.get_name()}")
                 print("Leave blank to keep current value.")
                 
-                name = input(f"Name ({staff.get_name()}): ").strip() or staff.get_name()
+                name_input = input(f"Name ({staff.get_name()}): ").strip()
+                if name_input:
+                    err = Validators.validate_name(name_input)
+                    if err:
+                        print(f"Error: {err}")
+                        return
+                    name = name_input
+                else:
+                    name = staff.get_name()
                 contact = input(f"Contact ({staff.get_contact()}): ").strip() or staff.get_contact()
                 spec = input(f"Specialization ({staff.get_specialization()}): ").strip() or staff.get_specialization()
                 
